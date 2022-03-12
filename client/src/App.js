@@ -10,6 +10,7 @@ const timeLimit = 60;
 function App() {
 
   const [words, setWords] = useState([])
+  const [countdown, setCountdown] = useState(timeLimit)
 
   useEffect(() => {
     setWords(generateWords());
@@ -19,14 +20,32 @@ function App() {
     return new Array(wordsDisplay).fill(null).map(() => randomWords())
   }
 
+  function start() {
+    let interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev === 0) {
+          clearInterval(interval);
+        } else {
+          return prev - 1
+        }
+      })
+
+    }, 1000)
+  }
+
 
   return (
     <div className="App">
+      <div className="section">
+        <div className="is-size-1 has-text-centered has-text-primary">
+          <h2>{countdown}</h2>
+        </div>
+      </div>
       <div className="control is-expanded section">
         <input type="text" className="input" />
       </div>
       <div className="section">
-        <button className="button is-info is-fullwidth">
+        <button className="button is-info is-fullwidth" onClick={start}>
           Start
         </button>
       </div>
@@ -36,8 +55,10 @@ function App() {
             <div className="content">
               {words.map((word, i) => (
                 <>
-                  <span>
-                    {word}
+                  <span key={i}>
+                    {word.split("").map((char, index) => (
+                      <span key={index}>{char}</span>
+                    ))}
                   </span>
                   <span> </span>
                 </>
