@@ -26,6 +26,11 @@ function App() {
         <input type="text" className="input" />
       </div>
       <div className="section">
+        <button className="button is-info is-fullwidth">
+          Start
+        </button>
+      </div>
+      <div className="section">
         <div className="card">
           <div className="card-content">
             <div className="content">
