@@ -22,6 +22,9 @@ function App() {
 
   return (
     <div className="App">
+      <div className="control is-expanded section">
+        <input type="text" className="input" />
+      </div>
       <div className="section">
         <div className="card">
           <div className="card-content">
