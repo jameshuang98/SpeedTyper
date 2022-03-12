@@ -15,14 +15,29 @@ function App() {
     setWords(generateWords());
   }, [])
 
-  generateWords() {
+  function generateWords() {
     return new Array(wordsDisplay).fill(null).map(() => randomWords())
   }
-  
+
 
   return (
     <div className="App">
-
+      <div className="section">
+        <div className="card">
+          <div className="card-content">
+            <div className="content">
+              {words.map((word, i) => (
+                <>
+                  <span>
+                    {word}
+                  </span>
+                  <span> </span>
+                </>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
