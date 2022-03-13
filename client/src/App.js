@@ -33,6 +33,10 @@ function App() {
     }, 1000)
   }
 
+  function handleInput(event) {
+    console.log(event.key)
+  }
+
 
   return (
     <div className="App">
@@ -42,7 +46,7 @@ function App() {
         </div>
       </div>
       <div className="control is-expanded section">
-        <input type="text" className="input" />
+        <input type="text" className="input" onKeyDown={handleInput}/>
       </div>
       <div className="section">
         <button className="button is-info is-fullwidth" onClick={start}>
