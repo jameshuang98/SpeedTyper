@@ -13,10 +13,12 @@ function App() {
   const [countdown, setCountdown] = useState(timeLimit);
   const [input, setInput] = useState('');
   const [currWordIndex, setCurrWordIndex] = useState(0);
+  const [currChar, setCurrChar] = useState('');
+  const [currCharIndex, setCurrCharIndex] = useState(-1);
   const [correct, setCorrect] = useState(0);
   const [incorrect, setIncorrect] = useState(0);
-  const [status, setStatus] = useState('pregame')
-  const textInput = useRef(null)
+  const [status, setStatus] = useState('pregame');
+  const textInput = useRef(null);
 
   useEffect(() => {
     setWords(generateWords());
@@ -38,6 +40,8 @@ function App() {
       setCurrWordIndex(0);
       setCorrect(0);
       setIncorrect(0);
+      setCurrCharIndex(-1);
+      setCurrChar('');
     }
     if (status !== 'playing') {
       setStatus('playing')
@@ -56,13 +60,21 @@ function App() {
     }
   }
 
-  function handleInput({ keyCode }) {
+  function handleInput({ keyCode, key }) {
     // check if user presses spacebar
     if (keyCode === 32) {
       checkMatch();
       setInput('');
-      setCurrWordIndex(currWordIndex + 1)
+      setCurrWordIndex(currWordIndex + 1);
+      setCurrCharIndex(-1);
+    } else if (keyCode === 8) {
+      setCurrCharIndex(currCharIndex - 1);
+      setCurrChar('');
+    } else {
+      setCurrCharIndex(currCharIndex + 1);
+      setCurrChar(key);
     }
+
   }
 
   function checkMatch() {
@@ -72,6 +84,20 @@ function App() {
       setCorrect(correct + 1);
     } else {
       setIncorrect(incorrect + 1)
+    }
+  }
+
+  function getCharClass(wordIndex, charIndex, char) {
+    if (currCharIndex && wordIndex === currWordIndex && charIndex === currCharIndex && status !== 'finished') {
+      if (char === currChar) {
+        return 'has-background-success';
+      }else {
+        return 'has-background-danger';
+      }
+    } else if (wordIndex === currWordIndex && currCharIndex >= words[currWordIndex].length) {
+      return 'has-background-danger'
+    } else {
+      return '';
     }
   }
 
@@ -98,7 +124,7 @@ function App() {
                 <span key={i}>
                   <span>
                     {word.split("").map((char, index) => (
-                      <span key={index}>{char}</span>
+                      <span key={index} className={getCharClass(i, index, char)}>{char}</span>
                     ))}
                   </span>
                   <span> </span>
