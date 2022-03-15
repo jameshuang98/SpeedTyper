@@ -9,8 +9,10 @@ const timeLimit = 60;
 
 function App() {
 
-  const [words, setWords] = useState([])
-  const [countdown, setCountdown] = useState(timeLimit)
+  const [words, setWords] = useState([]);
+  const [countdown, setCountdown] = useState(timeLimit);
+  const [input, setInput] = useState('');
+  const [currWordIndex, setCurrWordIndex] = useState(0);
 
   useEffect(() => {
     setWords(generateWords());
@@ -33,10 +35,20 @@ function App() {
     }, 1000)
   }
 
-  function handleInput(event) {
-    console.log(event.key)
+  function handleInput({keyCode}) {
+    // check if user presses spacebar
+    if (keyCode === 32) {
+      checkMatch();
+      setInput('');
+      setCurrWordIndex(currWordIndex + 1)
+    }
   }
 
+  function checkMatch() {
+    const wordToCompare = words[currWordIndex];
+    const matchBool = wordToCompare === input.trim();
+    console.log({matchBool})
+  }
 
   return (
     <div className="App">
@@ -46,7 +58,7 @@ function App() {
         </div>
       </div>
       <div className="control is-expanded section">
-        <input type="text" className="input" onKeyDown={handleInput}/>
+        <input type="text" className="input" onKeyDown={handleInput} value={input} onChange={(e) => setInput(e.target.value)}/>
       </div>
       <div className="section">
         <button className="button is-info is-fullwidth" onClick={start}>
@@ -58,14 +70,14 @@ function App() {
           <div className="card-content">
             <div className="content">
               {words.map((word, i) => (
-                <>
-                  <span key={i}>
+                <span key={i}>
+                  <span>
                     {word.split("").map((char, index) => (
                       <span key={index}>{char}</span>
                     ))}
                   </span>
                   <span> </span>
-                </>
+                </span>
               ))}
             </div>
           </div>
