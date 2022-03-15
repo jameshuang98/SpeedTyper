@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import randomWords from 'random-words'
 
@@ -15,27 +15,45 @@ function App() {
   const [currWordIndex, setCurrWordIndex] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [incorrect, setIncorrect] = useState(0);
-
+  const [status, setStatus] = useState('pregame')
+  const textInput = useRef(null)
 
   useEffect(() => {
     setWords(generateWords());
   }, [])
+
+  useEffect(() => {
+    if (status === 'playing') {
+      textInput.current.focus();
+    }
+  }, [status])
 
   function generateWords() {
     return new Array(wordsDisplay).fill(null).map(() => randomWords())
   }
 
   function start() {
-    let interval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev === 0) {
-          clearInterval(interval);
-        } else {
-          return prev - 1
-        }
-      })
-
-    }, 1000)
+    if (status === 'finished') {
+      setWords(generateWords());
+      setCurrWordIndex(0);
+      setCorrect(0);
+      setIncorrect(0);
+    }
+    if (status !== 'playing') {
+      setStatus('playing')
+      let interval = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev === 0) {
+            clearInterval(interval);
+            setStatus('finished');
+            setInput('');
+            return timeLimit;
+          } else {
+            return prev - 1
+          }
+        })
+      }, 1000)
+    }
   }
 
   function handleInput({ keyCode }) {
@@ -65,7 +83,7 @@ function App() {
         </div>
       </div>
       <div className="control is-expanded section">
-        <input type="text" className="input" onKeyDown={handleInput} value={input} onChange={(e) => setInput(e.target.value)} />
+        <input disabled={status !== 'playing'} ref={textInput} type="text" className="input" onKeyDown={handleInput} value={input} onChange={(e) => setInput(e.target.value)} />
       </div>
       <div className="section">
         <button className="button is-info is-fullwidth" onClick={start}>
@@ -90,18 +108,20 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="section">
-        <div className="columns">
-          <div className="column has-text-centered">
-            <p className="is-size-5">WPM:</p>
-            <p className="has-text-primary is-size-1">{correct}</p>
-          </div>
-          <div className="column has-text-centered">
-            <p className="is-size-5">Accuracy:</p>
-            <p className="has-text-info is-size-1">{Math.round((correct / (correct + incorrect)) * 100)} %</p>
+      {status === 'finished' && (
+        <div className="section">
+          <div className="columns">
+            <div className="column has-text-centered">
+              <p className="is-size-5">WPM:</p>
+              <p className="has-text-primary is-size-1">{correct}</p>
+            </div>
+            <div className="column has-text-centered">
+              <p className="is-size-5">Accuracy:</p>
+              <p className="has-text-info is-size-1">{Math.round((correct / (correct + incorrect)) * 100)} %</p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
