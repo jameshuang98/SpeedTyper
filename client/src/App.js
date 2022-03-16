@@ -6,7 +6,6 @@ import randomWords from 'random-words'
 const wordsDisplay = 200;
 const timeLimit = 60;
 
-
 function App() {
 
   const [words, setWords] = useState([]);
@@ -20,10 +19,12 @@ function App() {
   const [status, setStatus] = useState('pregame');
   const textInput = useRef(null);
 
+  // generate random words
   useEffect(() => {
     setWords(generateWords());
   }, [])
 
+  // focus the input element if the game starts
   useEffect(() => {
     if (status === 'playing') {
       textInput.current.focus();
@@ -31,20 +32,23 @@ function App() {
   }, [status])
 
   function generateWords() {
-    return new Array(wordsDisplay).fill(null).map(() => randomWords())
+    return new Array(wordsDisplay).fill(null).map(() => randomWords());
   }
 
   function start() {
+    // reset state if user is playing again
     if (status === 'finished') {
       setWords(generateWords());
       setCurrWordIndex(0);
       setCorrect(0);
       setIncorrect(0);
-      setCurrCharIndex(-1);
       setCurrChar('');
+      setCurrCharIndex(-1);
     }
+
+    // set status and start timer
     if (status !== 'playing') {
-      setStatus('playing')
+      setStatus('playing');
       let interval = setInterval(() => {
         setCountdown((prev) => {
           if (prev === 0) {
@@ -60,6 +64,7 @@ function App() {
     }
   }
 
+  // handles user input
   function handleInput({ keyCode, key }) {
     // check if user presses spacebar
     if (keyCode === 32) {
@@ -77,21 +82,23 @@ function App() {
 
   }
 
+  // compares correct spelling of word to user typed word
   function checkMatch() {
     const wordToCompare = words[currWordIndex];
     const isMatch = wordToCompare === input.trim();
     if (isMatch) {
       setCorrect(correct + 1);
     } else {
-      setIncorrect(incorrect + 1)
+      setIncorrect(incorrect + 1);
     }
   }
 
+  // highlight background of letter depending on if the character is correct or not
   function getCharClass(wordIndex, charIndex, char) {
-    if (currCharIndex && wordIndex === currWordIndex && charIndex === currCharIndex && status !== 'finished') {
+    if (wordIndex === currWordIndex && charIndex === currCharIndex && status !== 'finished') {
       if (char === currChar) {
         return 'has-background-success';
-      }else {
+      } else {
         return 'has-background-danger';
       }
     } else if (wordIndex === currWordIndex && currCharIndex >= words[currWordIndex].length) {
@@ -100,7 +107,7 @@ function App() {
       return '';
     }
   }
-
+  
   return (
     <div className="App">
       <div className="section">
