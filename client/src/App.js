@@ -1,6 +1,6 @@
 import './App.css';
 import { useState, useEffect, useRef } from 'react';
-import { Button } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 
 import randomWords from 'random-words'
 
@@ -110,7 +110,7 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <main>
       <div className="section">
         <div className="is-size-1 has-text-centered has-text-primary">
           <h2>{countdown}</h2>
@@ -140,8 +140,8 @@ function App() {
         <input disabled={status !== 'playing'} ref={textInput} type="text" className="input" onKeyDown={handleInput} value={input} onChange={(e) => setInput(e.target.value)} />
       </div>
 
-      <div className="section">
-        <button className="button is-info is-fullwidth" onClick={start}>
+      <div className="section start">
+        <button className="button is-info start-button" onClick={start}>
           Start
         </button>
       </div>
@@ -161,7 +161,7 @@ function App() {
         </div>
       )}
 
-    </div>
+    </main>
   );
 }
 
