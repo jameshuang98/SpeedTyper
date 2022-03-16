@@ -1,9 +1,18 @@
+html, body {
+    background-color: #8261d4;
+    background-image: url("https://www.transparenttextures.com/patterns/old-wall.png");
+    height: 100%;
+    margin: 0;
+}
+
 main {
     width: 65%;
     display:flex;
     flex-direction: column;
     align-self: center;
     margin: auto;
+    height: 100%;
+
 }
 
 .input {
@@ -18,6 +27,8 @@ main {
 
 .start-button {
     width: 120px;
+    color: black;
+    font-weight: bold;
     font-size: 20px;
     border-radius: 10px;
 }

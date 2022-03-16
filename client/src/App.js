@@ -141,7 +141,7 @@ function App() {
       </div>
 
       <div className="section start">
-        <button className="button is-info start-button" onClick={start}>
+        <button className="button is-success start-button" onClick={start}>
           Start
         </button>
       </div>
