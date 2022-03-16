@@ -107,7 +107,7 @@ function App() {
       return '';
     }
   }
-  
+
   return (
     <div className="App">
       <div className="section">
@@ -115,14 +115,7 @@ function App() {
           <h2>{countdown}</h2>
         </div>
       </div>
-      <div className="control is-expanded section">
-        <input disabled={status !== 'playing'} ref={textInput} type="text" className="input" onKeyDown={handleInput} value={input} onChange={(e) => setInput(e.target.value)} />
-      </div>
-      <div className="section">
-        <button className="button is-info is-fullwidth" onClick={start}>
-          Start
-        </button>
-      </div>
+
       <div className="section">
         <div className="card">
           <div className="card-content">
@@ -141,6 +134,17 @@ function App() {
           </div>
         </div>
       </div>
+
+      <div className="control is-expanded section">
+        <input disabled={status !== 'playing'} ref={textInput} type="text" className="input" onKeyDown={handleInput} value={input} onChange={(e) => setInput(e.target.value)} />
+      </div>
+
+      <div className="section">
+        <button className="button is-info is-fullwidth" onClick={start}>
+          Start
+        </button>
+      </div>
+
       {status === 'finished' && (
         <div className="section">
           <div className="columns">
@@ -150,11 +154,12 @@ function App() {
             </div>
             <div className="column has-text-centered">
               <p className="is-size-5">Accuracy:</p>
-              <p className="has-text-info is-size-1">{Math.round((correct / (correct + incorrect)) * 100)} %</p>
+              <p className="has-text-info is-size-1">{Math.round((correct / (correct + incorrect)) * 100)}%</p>
             </div>
           </div>
         </div>
       )}
+
     </div>
   );
 }
