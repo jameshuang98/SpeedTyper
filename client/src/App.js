@@ -112,7 +112,7 @@ function App() {
   return (
     <main>
       <div className="section">
-        <div className="is-size-1 has-text-centered has-text-primary">
+        <div className="is-size-1 has-text-centered has-text-light">
           <h2>{countdown}</h2>
         </div>
       </div>
@@ -150,12 +150,12 @@ function App() {
         <div className="section">
           <div className="columns">
             <div className="column has-text-centered">
-              <p className="is-size-5">WPM:</p>
-              <p className="has-text-primary is-size-1">{correct}</p>
+              <p className="has-text-light is-size-5">WPM:</p>
+              <p className="has-text-light is-size-1">{correct}</p>
             </div>
             <div className="column has-text-centered">
-              <p className="is-size-5">Accuracy:</p>
-              <p className="has-text-info is-size-1">{Math.round((correct / (correct + incorrect)) * 100)}%</p>
+              <p className="has-text-light is-size-5">Accuracy:</p>
+              <p className="has-text-light is-size-1">{Math.round((correct / (correct + incorrect)) * 100)}%</p>
             </div>
           </div>
         </div>
