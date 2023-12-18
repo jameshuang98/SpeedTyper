@@ -11,8 +11,6 @@ const COLORS = {
     tertiary: "#d37556",
     peach: "#d8a28c",
     pastel: "#f0eae3"
-
-
 };
 
 const SIZES = {
@@ -36,7 +34,7 @@ const SHADOWS = {
         elevation: 2
     },
     medium: {
-        wColor: "#000",
+        shadowColor: "#000",
         shadowOffset: {
             width: 0,
             height: 2,
