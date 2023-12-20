@@ -1,63 +1,78 @@
-import './Main.scss';
 import React, { useState, useEffect, useRef } from 'react';
-import { AppBar, Toolbar, Button, Typography } from '@mui/material';
+import { Button } from '@mui/material';
+
+import Appbar from 'components/Appbar/Appbar';
+
+import './Main.scss';
 import samples from './constants/samples'
 import isValidKey from './helpers';
 
 // Constants
 const linesOfText = 2;
-const timeLimit = 60;
+const timeLimit = 600000;
 
-type gameStates = "pregame" | "playing" | "postgame";
+type gameStates = "pregame" | "playing" | "paused" | "postgame";
+
+interface InputWord {
+    idx: number;
+    word: string;
+    isCorrect: boolean;
+}
 
 const MainNew: React.FC = () => {
 
     const [countdown, setCountdown] = useState<number>(timeLimit);
-    const [status, setStatus] = useState<gameStates>('pregame');
+    const [gameState, setGameState] = useState<gameStates>('pregame');
 
     const [words, setWords] = useState<string[]>([]);
     const [currWordIndex, setCurrWordIndex] = useState<number>(0);
     const [input, setInput] = useState<string>('');
+    const [inputWords, setInputWords] = useState<Array<InputWord>>([]);
     const [currWordInput, setCurrWordInput] = useState<string>('');
 
-    const [correctWords, setCorrectWords] = useState(0);
-    const [incorrectWords, setIncorrectWords] = useState(0);
+    const [correctWords, setCorrectWords] = useState<number>(0);
+    const [incorrectWords, setIncorrectWords] = useState<number>(0);
 
     const textInput = useRef<HTMLInputElement>(null);
 
     // generate random words
     useEffect(() => {
-        const randomIdx = Math.floor(Math.random() * (samples.length));
-        const sampleWords = samples[randomIdx].split(" ");
-        setWords(sampleWords);
+        generateWords();
     }, []);
 
     // focus the input element if the game starts
     useEffect(() => {
-        if (status === 'playing' && textInput.current) {
+        if (gameState === 'playing' && textInput.current) {
             textInput.current.focus();
         }
-    }, [status]);
+    }, [gameState]);
+
+    const generateWords = () => {
+        const randomIdx = Math.floor(Math.random() * (samples.length));
+        const sampleWords = samples[randomIdx].split(" ");
+        setWords(sampleWords);
+    };
 
     function start() {
         // reset state if user is playing again
-        if (status === 'postgame') {
+        if (gameState === 'postgame') {
+            generateWords();
             setCurrWordIndex(0);
+            setInput("");
+            setInputWords([]);
             setCurrWordInput("");
-
             setCorrectWords(0);
             setIncorrectWords(0);
         }
 
-        // set status and start timer
-        if (status !== 'playing') {
-            setStatus('playing');
+        // set gameState and start timer
+        if (gameState !== 'playing') {
+            setGameState('playing');
             let interval = setInterval(() => {
                 setCountdown((prev) => {
                     if (prev === 0) {
                         clearInterval(interval);
-                        setStatus('postgame');
-                        setInput('');
+                        setGameState('postgame');
                         return timeLimit;
                     } else {
                         return prev - 1;
@@ -67,26 +82,39 @@ const MainNew: React.FC = () => {
         }
     };
 
-    // handles user input
+    // Handle user input
     function handleInput({ key }: React.KeyboardEvent<HTMLInputElement>) {
-        if (!isValidKey(key)) {
-            console.log("invalid key")
+        // Handle user not entering a valid key or entering multiple spaces
+        if (!isValidKey(key) || (key === " " && input.slice(-1) === " ")) {
             return;
         }
         // console.log('key', key)
 
-        // TODO handle multiple spaces at same time
-        if (key === ' ') {
+        // Handle going to next word
+        if (key === " ") {
             checkWordSpelling();
             setCurrWordInput("");
             setCurrWordIndex(prev => prev + 1);
             setInput(prev => prev + key);
-            console.log('space');
-            // TODO update currWordIndex if we go to previous word
+
+            // Handle user going to previous characters
         } else if (key === 'Backspace') {
-            setCurrWordInput(prev => prev.slice(0, -1));
+            // Handle user going to previous word
+            if (input.slice(-1) === " ") {
+                if (inputWords.slice(-1)[0].isCorrect) {
+                    setCorrectWords(prev => prev - 1);
+                } else {
+                    setIncorrectWords(prev => prev - 1);
+                }
+                setCurrWordIndex(prev => prev - 1);
+                setCurrWordInput(inputWords.slice(-1)[0].word)
+                setInputWords(prev => prev.slice(0, -1))
+            } else {
+                setCurrWordInput(prev => prev.slice(0, -1));
+            }
             setInput(prev => prev.slice(0, -1));
-            console.log('backspace');
+
+            //Handle user entering normal characters
         } else {
             setCurrWordInput(prev => prev + key);
             setInput(prev => prev + key);
@@ -102,25 +130,39 @@ const MainNew: React.FC = () => {
         } else {
             setIncorrectWords(prev => prev + 1);
         }
+        setInputWords(prev =>
+            [...prev,
+            {
+                word: currWordInput.trim(),
+                idx: currWordIndex,
+                isCorrect: isMatch
+            }])
     };
 
     // highlight background of letter depending on if the character is correct or not
-    // const getWordClass = (): void => {
-    //     const wordToCompare = words[currWordIndex];
-    //     const isMatch = wordToCompare === currWordInput.trim();
-    // }
+    const getWordClass = (wordIdx: number): string => {
+        if (wordIdx > currWordIndex || gameState !== "playing") {
+            return "";
+        }
+
+        // TODO implement state to store past correct/incorrect words
+        if (wordIdx < currWordIndex) {
+            return inputWords[wordIdx].isCorrect ? "past-word-correct" : "past-word-incorrect";
+        }
+
+        const wordToCompare = words[wordIdx];
+        const isMatch = wordToCompare.startsWith(currWordInput.trim()) || wordToCompare === currWordInput.trim();
+        if (isMatch) {
+            return "correct-spelling"
+        } else {
+            return "incorrect-spelling"
+        }
+
+    }
 
     return (
         <div className="main">
-            <div className="appbar">
-                <AppBar position="static">
-                    <Toolbar>
-                        <Typography variant="body1" component="div" className="appbar">
-                            SpeedTyper
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
-            </div>
+            <Appbar />
 
             <div className="countdown">
                 <h2>{countdown}</h2>
@@ -131,7 +173,7 @@ const MainNew: React.FC = () => {
                     <div className="text sample">
                         {words.map((word, i) => (
                             <span key={i}>
-                                {word}
+                                <span className={getWordClass(i)}>{word}</span>
                                 <span> </span>
                             </span>
                         ))}
@@ -139,7 +181,7 @@ const MainNew: React.FC = () => {
                 </div>
 
                 <div className="input-container">
-                    <input disabled={status !== 'playing'} ref={textInput} type="text" onKeyDown={handleInput} value={input} />
+                    <input disabled={gameState !== 'playing'} ref={textInput} type="text" onKeyDown={handleInput} value={input} />
                 </div>
 
                 <div className="button-container">
@@ -159,7 +201,7 @@ const MainNew: React.FC = () => {
                 </div>
 
                 {/* {
-                    status === 'postgame' && (
+                    gameState === 'postgame' && (
                         <div className="section">
                             <div className="columns">
                                 <div className="column has-text-centered">
