@@ -9,7 +9,7 @@ import isValidKey from './helpers';
 
 // Constants
 const linesOfText = 2;
-const timeLimit = 600000;
+const timeLimit = 60;
 
 type gameStates = "pregame" | "playing" | "paused" | "postgame";
 
@@ -139,7 +139,7 @@ const Main: React.FC = () => {
             }])
     };
 
-    // highlight background of letter depending on if the character is correct or not
+    // Change word class depending on if the spelling is correct or not
     const getWordClass = (wordIdx: number): string => {
         if (wordIdx > currWordIndex || gameState !== "playing") {
             return "";
