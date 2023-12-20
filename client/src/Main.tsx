@@ -1,193 +1,224 @@
-// import './App.scss';
-// import { useState, useEffect, useRef } from 'react';
-// import Button from 'react-bootstrap/Button';
-// import AppBar from '@mui/material/AppBar';
-// import Box from '@mui/material/Box';
-// import Toolbar from '@mui/material/Toolbar';
-// import Typography from '@mui/material/Typography';
-// import IconButton from '@mui/material/IconButton';
-// import randomWords from 'random-words'
+import React, { useState, useEffect, useRef } from 'react';
+import { Button } from '@mui/material';
 
-import React from "react";
+import Appbar from 'components/Appbar/Appbar';
 
-// const wordsDisplay = 200;
-// const timeLimit = 60;
+import './Main.scss';
+import samples from './constants/samples'
+import isValidKey from './helpers';
 
-function Main() {
+// Constants
+const linesOfText = 2;
+const timeLimit = 600000;
 
-//   const [words, setWords] = useState([]);
-//   const [countdown, setCountdown] = useState(timeLimit);
-//   const [input, setInput] = useState('');
-//   const [currWordIndex, setCurrWordIndex] = useState(0);
-//   const [currChar, setCurrChar] = useState('');
-//   const [currCharIndex, setCurrCharIndex] = useState(-1);
-//   const [correct, setCorrect] = useState(0);
-//   const [incorrect, setIncorrect] = useState(0);
-//   const [status, setStatus] = useState('pregame');
-//   const textInput = useRef(null);
+type gameStates = "pregame" | "playing" | "paused" | "postgame";
 
-//   // generate random words
-//   useEffect(() => {
-//     setWords(generateWords());
-//   }, [])
+interface InputWord {
+    idx: number;
+    word: string;
+    isCorrect: boolean;
+}
 
-//   // focus the input element if the game starts
-//   useEffect(() => {
-//     if (status === 'playing') {
-//       textInput.current.focus();
-//     }
-//   }, [status])
+const Main: React.FC = () => {
 
-//   function generateWords() {
-//     return new Array(wordsDisplay).fill(null).map(() => randomWords());
-//   }
+    const [countdown, setCountdown] = useState<number>(timeLimit);
+    const [gameState, setGameState] = useState<gameStates>('pregame');
 
-//   function start() {
-//     // reset state if user is playing again
-//     if (status === 'finished') {
-//       setWords(generateWords());
-//       setCurrWordIndex(0);
-//       setCorrect(0);
-//       setIncorrect(0);
-//       setCurrChar('');
-//       setCurrCharIndex(-1);
-//     }
+    const [words, setWords] = useState<string[]>([]);
+    const [currWordIndex, setCurrWordIndex] = useState<number>(0);
+    const [input, setInput] = useState<string>('');
+    const [inputWords, setInputWords] = useState<Array<InputWord>>([]);
+    const [currWordInput, setCurrWordInput] = useState<string>('');
 
-//     // set status and start timer
-//     if (status !== 'playing') {
-//       setStatus('playing');
-//       let interval = setInterval(() => {
-//         setCountdown((prev) => {
-//           if (prev === 0) {
-//             clearInterval(interval);
-//             setStatus('finished');
-//             setInput('');
-//             return timeLimit;
-//           } else {
-//             return prev - 1
-//           }
-//         })
-//       }, 1000)
-//     }
-//   }
+    const [correctWords, setCorrectWords] = useState<number>(0);
+    const [incorrectWords, setIncorrectWords] = useState<number>(0);
 
-//   // handles user input
-//   function handleInput({ keyCode, key }) {
-//     // check if user presses spacebar
-//     if (keyCode === 32) {
-//       checkMatch();
-//       setInput('');
-//       setCurrWordIndex(currWordIndex + 1);
-//       setCurrCharIndex(-1);
-//     } else if (keyCode === 8) {
-//       setCurrCharIndex(currCharIndex - 1);
-//       setCurrChar('');
-//     } else {
-//       setCurrCharIndex(currCharIndex + 1);
-//       setCurrChar(key);
-//     }
+    const textInput = useRef<HTMLInputElement>(null);
 
-//   }
+    // generate random words
+    useEffect(() => {
+        generateWords();
+    }, []);
 
-//   // compares correct spelling of word to user typed word
-//   function checkMatch() {
-//     const wordToCompare = words[currWordIndex];
-//     const isMatch = wordToCompare === input.trim();
-//     if (isMatch) {
-//       setCorrect(correct + 1);
-//     } else {
-//       setIncorrect(incorrect + 1);
-//     }
-//   }
+    // focus the input element if the game starts
+    useEffect(() => {
+        if (gameState === 'playing' && textInput.current) {
+            textInput.current.focus();
+        }
+    }, [gameState]);
 
-//   // highlight background of letter depending on if the character is correct or not
-//   function getCharClass(wordIndex, charIndex, char) {
-//     if (wordIndex === currWordIndex && charIndex === currCharIndex && status !== 'finished') {
-//       if (char === currChar) {
-//         return 'has-background-success';
-//       } else {
-//         return 'has-background-danger';
-//       }
-//     } else if (wordIndex === currWordIndex && currCharIndex >= words[currWordIndex].length) {
-//       return 'has-background-danger'
-//     } else {
-//       return '';
-//     }
-//   }
+    const generateWords = () => {
+        const randomIdx = Math.floor(Math.random() * (samples.length));
+        const sampleWords = samples[randomIdx].split(" ");
+        setWords(sampleWords);
+    };
 
-  return (
-    <></>
-  )
-//     <main>
-//       <Box sx={{ flexGrow: 1 }}>
-//         <AppBar position="static">
-//           <Toolbar>
-//             <IconButton
-//               size="large"
-//               edge="start"
-//               color="inherit"
-//               aria-label="menu"
-//               sx={{ mr: 2 }}
-//             >
-//             </IconButton>
-//             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-//               News
-//             </Typography>
-//           </Toolbar>
-//         </AppBar>
-//       </Box>
-//       <div className="section">
-//         <div className="is-size-1 has-text-centered has-text-light">
-//           <h2>{countdown}</h2>
-//         </div>
-//       </div>
+    function start() {
+        // reset state if user is playing again
+        if (gameState === 'postgame') {
+            generateWords();
+            setCurrWordIndex(0);
+            setInput("");
+            setInputWords([]);
+            setCurrWordInput("");
+            setCorrectWords(0);
+            setIncorrectWords(0);
+        }
 
-//       <div className="section">
-//         <div className="card">
-//           <div className="card-content">
-//             <div className="content">
-//               {words.map((word, i) => (
-//                 <span key={i}>
-//                   <span>
-//                     {word.split("").map((char, index) => (
-//                       <span key={index} className={getCharClass(i, index, char)}>{char}</span>
-//                     ))}
-//                   </span>
-//                   <span> </span>
-//                 </span>
-//               ))}
-//             </div>
-//           </div>
-//         </div>
-//       </div>
+        // set gameState and start timer
+        if (gameState !== 'playing') {
+            setGameState('playing');
+            let interval = setInterval(() => {
+                setCountdown((prev) => {
+                    if (prev === 0) {
+                        clearInterval(interval);
+                        setGameState('postgame');
+                        return timeLimit;
+                    } else {
+                        return prev - 1;
+                    }
+                })
+            }, 1000)
+        }
+    };
 
-//       <div className="control is-expanded section">
-//         <input disabled={status !== 'playing'} ref={textInput} type="text" onKeyDown={handleInput} value={input} onChange={(e) => setInput(e.target.value)} />
-//       </div>
+    // Handle user input
+    function handleInput({ key }: React.KeyboardEvent<HTMLInputElement>) {
+        // Handle user not entering a valid key or entering multiple spaces
+        if (!isValidKey(key) || (key === " " && input.slice(-1) === " ")) {
+            return;
+        }
+        // console.log('key', key)
 
-//       <div className="section start">
-//         <button className="button is-success start-button" onClick={start}>
-//           Start
-//         </button>
-//       </div>
+        // Handle going to next word
+        if (key === " ") {
+            checkWordSpelling();
+            setCurrWordInput("");
+            setCurrWordIndex(prev => prev + 1);
+            setInput(prev => prev + key);
 
-//       {status === 'finished' && (
-//         <div className="section">
-//           <div className="columns">
-//             <div className="column has-text-centered">
-//               <p className="has-text-light is-size-5">WPM:</p>
-//               <p className="has-text-light is-size-1">{correct}</p>
-//             </div>
-//             <div className="column has-text-centered">
-//               <p className="has-text-light is-size-5">Accuracy:</p>
-//               <p className="has-text-light is-size-1">{Math.round((correct / (correct + incorrect)) * 100)}%</p>
-//             </div>
-//           </div>
-//         </div>
-//       )}
+            // Handle user going to previous characters
+        } else if (key === 'Backspace') {
+            // Handle user going to previous word
+            if (input.slice(-1) === " ") {
+                if (inputWords.slice(-1)[0].isCorrect) {
+                    setCorrectWords(prev => prev - 1);
+                } else {
+                    setIncorrectWords(prev => prev - 1);
+                }
+                setCurrWordIndex(prev => prev - 1);
+                setCurrWordInput(inputWords.slice(-1)[0].word)
+                setInputWords(prev => prev.slice(0, -1))
+            } else {
+                setCurrWordInput(prev => prev.slice(0, -1));
+            }
+            setInput(prev => prev.slice(0, -1));
 
-//     </main>
-//   );
+            //Handle user entering normal characters
+        } else {
+            setCurrWordInput(prev => prev + key);
+            setInput(prev => prev + key);
+        }
+    };
+
+    // Compares correct spelling of word to user-typed word
+    const checkWordSpelling = (): void => {
+        const wordToCompare = words[currWordIndex];
+        const isMatch = wordToCompare === currWordInput.trim();
+        if (isMatch) {
+            setCorrectWords(prev => prev + 1);
+        } else {
+            setIncorrectWords(prev => prev + 1);
+        }
+        setInputWords(prev =>
+            [...prev,
+            {
+                word: currWordInput.trim(),
+                idx: currWordIndex,
+                isCorrect: isMatch
+            }])
+    };
+
+    // highlight background of letter depending on if the character is correct or not
+    const getWordClass = (wordIdx: number): string => {
+        if (wordIdx > currWordIndex || gameState !== "playing") {
+            return "";
+        }
+
+        // TODO implement state to store past correct/incorrect words
+        if (wordIdx < currWordIndex) {
+            return inputWords[wordIdx].isCorrect ? "past-word-correct" : "past-word-incorrect";
+        }
+
+        const wordToCompare = words[wordIdx];
+        const isMatch = wordToCompare.startsWith(currWordInput.trim()) || wordToCompare === currWordInput.trim();
+        if (isMatch) {
+            return "correct-spelling"
+        } else {
+            return "incorrect-spelling"
+        }
+
+    }
+
+    return (
+        <div className="main">
+            <Appbar />
+
+            <div className="countdown">
+                <h2>{countdown}</h2>
+            </div>
+
+            <div className="main-container">
+                <div className="output-container">
+                    <div className="text sample">
+                        {words.map((word, i) => (
+                            <span key={i}>
+                                <span className={getWordClass(i)}>{word}</span>
+                                <span> </span>
+                            </span>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="input-container">
+                    <input disabled={gameState !== 'playing'} ref={textInput} type="text" onKeyDown={handleInput} value={input} />
+                </div>
+
+                <div className="button-container">
+                    <Button variant="contained" color="success" onClick={start}>
+                        Start
+                    </Button>
+                </div>
+
+                <div>
+                    <div>Correct Words:</div>
+                    {correctWords}
+                </div>
+
+                <div>
+                    <div>Incorrect Words:</div>
+                    {incorrectWords}
+                </div>
+
+                {/* {
+                    gameState === 'postgame' && (
+                        <div className="section">
+                            <div className="columns">
+                                <div className="column has-text-centered">
+                                    <p className="has-text-light is-size-5">WPM:</p>
+                                    <p className="has-text-light is-size-1">{correct}</p>
+                                </div>
+                                <div className="column has-text-centered">
+                                    <p className="has-text-light is-size-5">Accuracy:</p>
+                                    <p className="has-text-light is-size-1">{Math.round((correct / (correct + incorrect)) * 100)}%</p>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                } */}
+            </div>
+        </div>
+    );
 }
 
 export default Main;

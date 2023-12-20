@@ -1,12 +1,12 @@
 import React from "react";
 import "./App.scss";
 // import Main from "./Main";
-import MainNew from "./MainNew";
+import Main from "./Main";
 
 function App() {
   return (
     <div>
-      <MainNew />
+      <Main />
     </div>
   );
 }
