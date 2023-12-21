@@ -1,14 +1,21 @@
 import React from 'react'
 import ResultCard from './ResultCard'
 
-type Props = {}
+type Props = {
+    correctWords: number;
+    incorrectWords: number;
+    characters: number;
+}
 
-function Postgame({ }: Props) {
+function Postgame({ correctWords, incorrectWords, characters }: Props) {
+
     return (
         <div className='main-container'>
-
-            Postgame
-
+            <ResultCard
+                correctWords={correctWords}
+                incorrectWords={incorrectWords}
+                characters={characters}
+            />
         </div>
     )
 }
