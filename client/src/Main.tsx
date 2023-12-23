@@ -9,7 +9,6 @@ import isValidKey from './helpers';
 import Postgame from 'components/Postgame/Postgame';
 
 // Constants
-const linesOfText = 2;
 const timeLimit = 60;
 
 type gameStates = "pregame" | "playing" | "paused" | "postgame";
