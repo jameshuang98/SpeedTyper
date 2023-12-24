@@ -19,12 +19,6 @@ interface InputWord {
     isCorrect: boolean;
 }
 
-type WordProps = {
-    displayWords: Array<string>;
-    minIdx: number;
-    indexes: Array<number>;
-}
-
 const Main: React.FC = () => {
 
     const [countdown, setCountdown] = useState<number>(timeLimit);
@@ -44,26 +38,6 @@ const Main: React.FC = () => {
     const [wordRefs, setWordRefs] = useState<Array<any>>([]);
     const [lineIndexes, setLineIndexes] = useState<Array<number>>([]);
     const [currLineIndex, setCurrLineIndex] = useState<number>(0);
-
-    const WordList = ({ displayWords, minIdx, indexes }: WordProps) => {
-        // Filter the words based on currLineIndex
-        console.log('indexes[minIdx]', indexes[minIdx])
-        return (
-            <div className="text sample">
-                {displayWords.map((word, i) => {
-                    if (i >= indexes[minIdx]) {
-                        return (
-                            <span key={i}>
-                                <span className={getWordClass(i)} ref={wordRefs[i]}>{word}</span>
-                                <span> </span>
-                            </span>
-                        )
-                    }
-                })}
-            </div>
-        );
-    };
-
 
     useEffect(() => {
         // generate random words
@@ -158,16 +132,17 @@ const Main: React.FC = () => {
 
         // Handle going to next word
         if (key === " ") {
+            // Check if user is going to next line
             if ((currWordIndex + 1) === lineIndexes[currLineIndex + 1]) {
                 console.log('lineIndexes[currLineIndex + 1]', lineIndexes[currLineIndex + 1])
                 console.log('currWordIndex + 1', currWordIndex + 1)
                 setCurrLineIndex(prev => prev + 1)
             }
+
             checkWordSpelling();
             setCurrWordInput("");
             setCurrWordIndex(prev => prev + 1);
             setInput(prev => prev + key);
-            // Check if user is going to next line
 
             // Handle user going to previous characters
         } else if (key === 'Backspace') {
@@ -217,7 +192,6 @@ const Main: React.FC = () => {
             return "";
         }
 
-        // TODO implement state to store past correct/incorrect words
         if (wordIdx < currWordIndex) {
             return inputWords[wordIdx].isCorrect ? "past-word-correct" : "past-word-incorrect";
         }
@@ -229,7 +203,6 @@ const Main: React.FC = () => {
         } else {
             return "incorrect-spelling"
         }
-
     }
 
     return (
@@ -252,7 +225,6 @@ const Main: React.FC = () => {
                             </span>
                         )).slice(lineIndexes[currLineIndex])}
                     </div>
-                    {/* <WordList displayWords={words} minIdx={currLineIndex} indexes={lineIndexes} /> */}
                 </div>
 
                 <div className="input-container">
