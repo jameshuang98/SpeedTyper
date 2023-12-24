@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, RefObject, createRef } from 'react';
 import { Button } from '@mui/material';
 
 import Appbar from 'components/Appbar/Appbar';
@@ -19,6 +19,12 @@ interface InputWord {
     isCorrect: boolean;
 }
 
+type WordProps = {
+    displayWords: Array<string>;
+    minIdx: number;
+    indexes: Array<number>;
+}
+
 const Main: React.FC = () => {
 
     const [countdown, setCountdown] = useState<number>(timeLimit);
@@ -35,10 +41,50 @@ const Main: React.FC = () => {
 
     const textInput = useRef<HTMLInputElement>(null);
 
-    // generate random words
+    const [wordRefs, setWordRefs] = useState<Array<any>>([]);
+    const [lineIndexes, setLineIndexes] = useState<Array<number>>([]);
+    const [currLineIndex, setCurrLineIndex] = useState<number>(0);
+
+    const WordList = ({ displayWords, minIdx, indexes }: WordProps) => {
+        // Filter the words based on currLineIndex
+        console.log('indexes[minIdx]', indexes[minIdx])
+        return (
+            <div className="text sample">
+                {displayWords.map((word, i) => {
+                    if (i >= indexes[minIdx]) {
+                        return (
+                            <span key={i}>
+                                <span className={getWordClass(i)} ref={wordRefs[i]}>{word}</span>
+                                <span> </span>
+                            </span>
+                        )
+                    }
+                })}
+            </div>
+        );
+    };
+
+
     useEffect(() => {
-        generateWords();
+        // generate random words
+        const sampleWords = generateWords();
+        setWords(sampleWords);
+
+        // add a ref for each word
+        setWordRefs((refs) =>
+            Array(sampleWords.length)
+                .fill(undefined)
+                .map((_, i) => refs[i] || createRef()),
+        );
+
     }, []);
+
+    useEffect(() => {
+        // for (const ref of wordRefs) {
+        //     console.log(ref.current.offsetTop)
+        // }
+        getLineIndexes();
+    }, [wordRefs]);
 
     // focus the input element if the game starts
     useEffect(() => {
@@ -47,11 +93,31 @@ const Main: React.FC = () => {
         }
     }, [gameState]);
 
-    const generateWords = () => {
+    const generateWords = (): string[] => {
         const randomIdx = Math.floor(Math.random() * (samples.length));
-        const sampleWords = samples[randomIdx].split(" ");
-        setWords(sampleWords);
+        return samples[randomIdx].split(" ");
     };
+
+    // Get the index of the first word of each line
+    const getLineIndexes = () => {
+        let indexObj: { [key: number]: number } = {};
+        console.log('wordRefs', wordRefs)
+        for (const idx in wordRefs) {
+            const offsetTop: number = wordRefs[idx]?.current?.offsetTop;
+            if (offsetTop && !indexObj.hasOwnProperty(offsetTop)) {
+                indexObj[offsetTop] = parseInt(idx);
+            }
+        }
+        const indexes = Object.values(indexObj);
+        console.log("indexes getLineIndexes", indexes)
+
+        if (indexes.length > 0) {
+            setLineIndexes(indexes)
+        } else {
+            setLineIndexes([0]);
+        }
+    }
+
 
     function start() {
         // reset state if user is playing again
@@ -92,10 +158,16 @@ const Main: React.FC = () => {
 
         // Handle going to next word
         if (key === " ") {
+            if ((currWordIndex + 1) === lineIndexes[currLineIndex + 1]) {
+                console.log('lineIndexes[currLineIndex + 1]', lineIndexes[currLineIndex + 1])
+                console.log('currWordIndex + 1', currWordIndex + 1)
+                setCurrLineIndex(prev => prev + 1)
+            }
             checkWordSpelling();
             setCurrWordInput("");
             setCurrWordIndex(prev => prev + 1);
             setInput(prev => prev + key);
+            // Check if user is going to next line
 
             // Handle user going to previous characters
         } else if (key === 'Backspace') {
@@ -173,11 +245,14 @@ const Main: React.FC = () => {
                     <div className="text sample">
                         {words.map((word, i) => (
                             <span key={i}>
-                                <span className={getWordClass(i)}>{word}</span>
+                                <span className={getWordClass(i)} ref={wordRefs[i]}>
+                                    {word}
+                                </span>
                                 <span> </span>
                             </span>
-                        ))}
+                        )).slice(lineIndexes[currLineIndex])}
                     </div>
+                    {/* <WordList displayWords={words} minIdx={currLineIndex} indexes={lineIndexes} /> */}
                 </div>
 
                 <div className="input-container">
