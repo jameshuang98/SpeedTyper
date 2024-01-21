@@ -1,0 +1,19 @@
+.button-container {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.icon-button {
+    border-radius: 10px !important;
+    color: white !important;
+    padding: .38rem !important;
+    &:hover {
+        opacity: .8;
+    }
+}
+
+.game-state-text {
+    color: #ffb74d;
+}

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, RefObject, createRef } from 'react';
-import { Button } from '@mui/material';
+import { GameStates, InputWord } from 'constants/types';
 
 import Appbar from 'components/Appbar/Appbar';
+import GameStateButton from 'components/Button/GameStateButton';
 
 import './Main.scss';
 import samples from './constants/samples'
@@ -11,18 +12,10 @@ import Postgame from 'components/Postgame/Postgame';
 // Constants
 const timeLimit = 60;
 
-type gameStates = "pregame" | "playing" | "paused" | "postgame";
-
-interface InputWord {
-    idx: number;
-    word: string;
-    isCorrect: boolean;
-}
-
 const Main: React.FC = () => {
 
     const [countdown, setCountdown] = useState<number>(timeLimit);
-    const [gameState, setGameState] = useState<gameStates>('pregame');
+    const [gameState, setGameState] = useState<GameStates>('pregame');
 
     const [words, setWords] = useState<string[]>([]);
     const [currWordIndex, setCurrWordIndex] = useState<number>(0);
@@ -40,17 +33,7 @@ const Main: React.FC = () => {
     const [currLineIndex, setCurrLineIndex] = useState<number>(0);
 
     useEffect(() => {
-        // generate random words
-        const sampleWords = generateWords();
-        setWords(sampleWords);
-
-        // add a ref for each word
-        setWordRefs((refs) =>
-            Array(sampleWords.length)
-                .fill(undefined)
-                .map((_, i) => refs[i] || createRef()),
-        );
-
+        reset();
     }, []);
 
     useEffect(() => {
@@ -92,35 +75,60 @@ const Main: React.FC = () => {
         }
     }
 
+    const reset = () => {
+        // generate new words
+        const sampleWords = generateWords();
+        setWords(sampleWords);
 
-    function start() {
-        // reset state if user is playing again
-        if (gameState === 'postgame') {
-            generateWords();
-            setCurrWordIndex(0);
-            setInput("");
-            setInputWords([]);
-            setCurrWordInput("");
-            setCorrectWords(0);
-            setIncorrectWords(0);
-        }
+        // add a ref for each word
+        setWordRefs((refs) =>
+            Array(sampleWords.length)
+                .fill(undefined)
+                .map((_, i) => refs[i] || createRef()),
+        );
 
-        // set gameState and start timer
-        if (gameState !== 'playing') {
-            setGameState('playing');
-            let interval = setInterval(() => {
+        // reset state
+        setGameState("pregame");
+        setCurrWordIndex(0);
+        setInput("");
+        setInputWords([]);
+        setCurrWordInput("");
+        setCorrectWords(0);
+        setIncorrectWords(0);
+        setCountdown(60);
+    }
+
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const changeGameState = (state: GameStates): void => {
+        console.log("state", state)
+        console.log("interval", intervalRef.current)
+        // start the game
+        if (gameState !== "playing") {
+            setGameState("playing");
+
+            intervalRef.current = setInterval(() => {
                 setCountdown((prev) => {
                     if (prev === 0) {
-                        clearInterval(interval);
-                        setGameState('postgame');
+                        if (intervalRef.current) {
+                            clearInterval(intervalRef.current);
+                        }
+                        setGameState("postgame");
                         return timeLimit;
                     } else {
                         return prev - 1;
                     }
-                })
-            }, 1000)
+                });
+            }, 1000);
+        }
+
+        // pause the game
+        else if (state === "paused" && intervalRef.current) {
+            console.log("pause")
+            clearInterval(intervalRef.current);
+            setGameState("paused");
         }
     };
+
 
     // Handle user input
     function handleInput({ key }: React.KeyboardEvent<HTMLInputElement>) {
@@ -148,6 +156,12 @@ const Main: React.FC = () => {
         } else if (key === 'Backspace') {
             // Handle user going to previous word
             if (input.slice(-1) === " ") {
+                // Check if user is going to previous line
+                if ((currWordIndex - 1) < lineIndexes[currLineIndex]) {
+                    setCurrLineIndex(prev => prev - 1)
+                }
+
+                // Handle updating correct/incorrect count after going to previous word
                 if (inputWords.slice(-1)[0].isCorrect) {
                     setCorrectWords(prev => prev - 1);
                 } else {
@@ -231,13 +245,9 @@ const Main: React.FC = () => {
                     <input disabled={gameState !== 'playing'} ref={textInput} type="text" onKeyDown={handleInput} value={input} />
                 </div>
 
-                <div className="button-container">
-                    <Button variant="contained" color="success" onClick={start}>
-                        Start
-                    </Button>
-                </div>
+                <GameStateButton gameState={gameState} changeGameState={changeGameState} reset={reset} />
 
-                <div>
+                {/* <div>
                     <div>Correct Words:</div>
                     {correctWords}
                 </div>
@@ -245,7 +255,7 @@ const Main: React.FC = () => {
                 <div>
                     <div>Incorrect Words:</div>
                     {incorrectWords}
-                </div>
+                </div> */}
 
                 {
                     gameState === 'postgame' && (

@@ -4,7 +4,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
 }
 
 .main-container {
@@ -13,13 +12,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #69c1e4;
+    background-color: #616161;
     size: 12px;
     width: 60%;
-}
-
-.text {
-    background-color: #FFFFFF;
 }
 
 .output-container {
@@ -27,10 +22,16 @@
     flex-direction: row;
 }
 
+.text {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+}
+
 .sample {
-    height: 264px;
+    height: 268px;
     line-height: 1.67;
-    overflow-y: scroll;
+    overflow-y: hidden;
+    padding: 10px;
 }
 
 .countdown {
@@ -68,20 +69,9 @@ input {
     background-color: red;
 }
 
-.button-container {
-    margin-top: 2rem;
-}
-
-.start {
+.column-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.start-button {
-    width: 120px;
-    color: black;
-    font-weight: bold;
-    font-size: 20px;
-    border-radius: 10px;
+    gap: .2rem;
 }
