@@ -95,7 +95,7 @@ const Main: React.FC = () => {
         setCurrWordInput("");
         setCorrectWords(0);
         setIncorrectWords(0);
-        setCountdown(60);
+        setCountdown(timeLimit);
     }
 
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -223,51 +223,47 @@ const Main: React.FC = () => {
         <div className="main">
             <Appbar />
 
-            <div className="countdown">
-                <h2>{countdown}</h2>
-            </div>
+            {
+                gameState !== 'postgame' && (
+                    <>
+                        <div className="countdown">
+                            <h2>{countdown}</h2>
+                        </div>
 
-            <div className="main-container">
-                <div className="output-container">
-                    <div className="text sample">
-                        {words.map((word, i) => (
-                            <span key={i}>
-                                <span className={getWordClass(i)} ref={wordRefs[i]}>
-                                    {word}
-                                </span>
-                                <span> </span>
-                            </span>
-                        )).slice(lineIndexes[currLineIndex])}
-                    </div>
-                </div>
+                        <div className="main-container">
+                            <div className="output-container">
+                                <div className="text sample">
+                                    {words.map((word, i) => (
+                                        <span key={i}>
+                                            <span className={getWordClass(i)} ref={wordRefs[i]}>
+                                                {word}
+                                            </span>
+                                            <span> </span>
+                                        </span>
+                                    )).slice(lineIndexes[currLineIndex])}
+                                </div>
+                            </div>
 
-                <div className="input-container">
-                    <input disabled={gameState !== 'playing'} ref={textInput} type="text" onKeyDown={handleInput} value={input} />
-                </div>
+                            <div className="input-container">
+                                <input disabled={gameState !== 'playing'} ref={textInput} type="text" onKeyDown={handleInput} value={input} />
+                            </div>
+                        </div>
+                    </>
+                )
+            }
 
-                <GameStateButton gameState={gameState} changeGameState={changeGameState} reset={reset} />
+            <GameStateButton gameState={gameState} changeGameState={changeGameState} reset={reset} />
 
-                {/* <div>
-                    <div>Correct Words:</div>
-                    {correctWords}
-                </div>
-
-                <div>
-                    <div>Incorrect Words:</div>
-                    {incorrectWords}
-                </div> */}
-
-                {
-                    gameState === 'postgame' && (
-                        <Postgame
-                            correctWords={correctWords}
-                            incorrectWords={incorrectWords}
-                            characters={input.length}
-                        />
-
-                    )
-                }
-            </div>
+            {
+                gameState === 'postgame' && (
+                    <Postgame
+                        correctWords={correctWords}
+                        incorrectWords={incorrectWords}
+                        characters={input.length}
+                        reset={reset}
+                    />
+                )
+            }
         </div>
     );
 }

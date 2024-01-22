@@ -1,0 +1,33 @@
+.result-card {
+    width: 15rem;
+    height: 18rem;
+    border-radius: 16px !important;
+}
+
+.header {
+    background-color: #1976d2;
+    color: white;
+    padding: 8px 0 8px 10px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.wpm {
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    padding: 24px 0 24px 0px;
+}
+
+.stat {
+    padding: 12px 0 8px 10px;
+    font-size: .8rem;
+}
+
+.postgame-buttons {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+}
