@@ -4,6 +4,7 @@ namespace server.Entities
 {
     public class Score
     {
+        public int Id { get; set; }
         public int UserId { get; set; }
         public int CorrectWords { get; set; }
         public int IncorrectWords { get; set; }
