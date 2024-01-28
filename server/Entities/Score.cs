@@ -11,7 +11,8 @@ namespace server.Entities
         public int Characters { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        [ForeignKey("UserId")]
-        public User User { get ; set; }
+        
+        //[ForeignKey("UserId")]
+        public User? User { get ; set; }
     }
 }

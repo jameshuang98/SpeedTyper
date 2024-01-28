@@ -398,11 +398,10 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Build files
-Nile.API/obj/
-Nile.Models/obj/
-Nile.Web/obj/
-Nile.API/bin/
-Nile.Models/bin/
-Nile.Web/bin/
-.vs/
+server/bin/
+server/obj/
+.vs\
 */.vs
+
+server.csproj.user
+server/.config/
