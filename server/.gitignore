@@ -405,3 +405,6 @@ server/obj/
 
 server.csproj.user
 server/.config/
+/server/server.csproj.user
+/server/.vs/server/v17/.suo
+/server/.config
