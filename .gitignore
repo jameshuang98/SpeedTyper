@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/server/server.csproj.user
+/server/.vs/server/v17/.suo
+/server/server.csproj.user
