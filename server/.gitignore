@@ -404,7 +404,12 @@ server/obj/
 */.vs
 
 server.csproj.user
-server/.config/
-/server/server.csproj.user
-/server/.vs/server/v17/.suo
-/server/.config
+.config/
+.vs/server/v17/.suo
+.config/
+/Properties/ServiceDependencies
+/Properties/PublishProfiles
+
+# Ignore environment-specific configuration files
+appsettings.*.json
+appsettings.json

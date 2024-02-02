@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using server.Repositories;
 
 namespace server
 {
@@ -20,15 +21,22 @@ namespace server
             var connection = String.Empty;
             if (builder.Environment.IsDevelopment())
             {
+                System.Diagnostics.Debug.WriteLine("hello");
                 builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.Development.json");
-                connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
+                connection = builder.Configuration.GetConnectionString("LOCAL_SQL_CONNECTIONSTRING");
             }
             else
             {
+                System.Diagnostics.Debug.WriteLine("hello2");
+
                 connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
             }
 
             builder.Services.AddDbContext<SpeedTyperDbContext>(options => options.UseSqlServer(connection));
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IScoreRepository, ScoreRepository>();
+
 
             var app = builder.Build();
 
