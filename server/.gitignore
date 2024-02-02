@@ -413,3 +413,4 @@ server.csproj.user
 # Ignore environment-specific configuration files
 appsettings.*.json
 appsettings.json
+!appsettings.example.json
