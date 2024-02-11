@@ -28,8 +28,6 @@ const Main: React.FC = () => {
     const [correctWords, setCorrectWords] = useState<number>(0);
     const [incorrectWords, setIncorrectWords] = useState<number>(0);
 
-    const textInput = useRef<HTMLInputElement>(null);
-
     const [wordRefs, setWordRefs] = useState<Array<any>>([]);
     const [lineIndexes, setLineIndexes] = useState<Array<number>>([]);
     const [currLineIndex, setCurrLineIndex] = useState<number>(0);
@@ -200,7 +198,7 @@ const Main: React.FC = () => {
         if (wordIdx > currWordIndex) {
             return "";
         }
-
+        console.log("currWordIndex", currWordIndex)
         if (wordIdx < currWordIndex) {
             return inputWords[wordIdx].isCorrect ? "past-word-correct" : "past-word-incorrect";
         }
@@ -217,32 +215,24 @@ const Main: React.FC = () => {
     return (
         <div className="main">
             <Appbar />
-
-            {
-                true && (
-                    <>
-                        <Countdown countdown={countdown} />
-
-                        <TextDisplay
-                            gameState={gameState}
-                            words={words}
-                            getWordClass={getWordClass}
-                            wordRefs={wordRefs}
-                            lineIndexes={lineIndexes}
-                            currLineIndex={currLineIndex}
-                            input={input}
-                            handleInput={handleInput}
-                        />
-                    </>
-                )
-            }
-
+            <>
+                <Countdown countdown={countdown} />
+                <TextDisplay
+                    gameState={gameState}
+                    words={words}
+                    getWordClass={getWordClass}
+                    wordRefs={wordRefs}
+                    lineIndexes={lineIndexes}
+                    currLineIndex={currLineIndex}
+                    input={input}
+                    handleInput={handleInput}
+                />
+            </>
             <GameStateButton
                 gameState={gameState}
                 changeGameState={changeGameState}
                 reset={reset}
             />
-
             {
                 gameState === 'postgame' && (
                     <Postgame

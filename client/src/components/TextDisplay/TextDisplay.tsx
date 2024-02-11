@@ -1,14 +1,14 @@
-import { GameStates, InputWord } from 'constants/types'
+import { GameStates } from 'constants/types'
 import React, { useEffect, useRef } from 'react'
 
 type Props = {
-    gameState: GameStates,
-    words: Array<string>,
-    getWordClass: Function,
-    wordRefs: Array<any>,
-    lineIndexes: Array<number>,
-    currLineIndex: number,
-    input: string,
+    gameState: GameStates;
+    words: Array<string>;
+    getWordClass: Function;
+    wordRefs: Array<any>;
+    lineIndexes: Array<number>;
+    currLineIndex: number;
+    input: string;
     handleInput: React.KeyboardEventHandler<HTMLInputElement>
 }
 
