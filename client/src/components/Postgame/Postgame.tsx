@@ -1,5 +1,5 @@
 import React, { MouseEventHandler } from 'react'
-import ResultCard from './ResultCard'
+import ResultCard from '../ResultCard/ResultCard'
 import "./Postgame.scss"
 
 type Props = {
