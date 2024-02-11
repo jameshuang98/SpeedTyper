@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, RefObject, createRef } from 'react';
+import React, { useState, useEffect, useRef, createRef } from 'react';
 import { GameStates, InputWord } from 'constants/types';
 
 import Appbar from 'components/Appbar/Appbar';
@@ -8,6 +8,8 @@ import './Main.scss';
 import samples from './constants/samples'
 import isValidKey from './helpers';
 import Postgame from 'components/Postgame/Postgame';
+import TextDisplay from 'components/TextDisplay/TextDisplay';
+import Countdown from 'components/Countdown/Countdown';
 
 // Constants
 const timeLimit = 60;
@@ -42,13 +44,6 @@ const Main: React.FC = () => {
         // }
         getLineIndexes();
     }, [wordRefs]);
-
-    // focus the input element if the game starts
-    useEffect(() => {
-        if (gameState === 'playing' && textInput.current) {
-            textInput.current.focus();
-        }
-    }, [gameState]);
 
     const generateWords = (): string[] => {
         const randomIdx = Math.floor(Math.random() * (samples.length));
@@ -202,7 +197,7 @@ const Main: React.FC = () => {
 
     // Change word class depending on if the spelling is correct or not
     const getWordClass = (wordIdx: number): string => {
-        if (wordIdx > currWordIndex || gameState !== "playing") {
+        if (wordIdx > currWordIndex) {
             return "";
         }
 
@@ -224,13 +219,22 @@ const Main: React.FC = () => {
             <Appbar />
 
             {
-                gameState !== 'postgame' && (
+                true && (
                     <>
-                        <div className="countdown">
-                            <h2>{countdown}</h2>
-                        </div>
+                        <Countdown countdown={countdown} />
 
-                        <div className="main-container">
+                        <TextDisplay
+                            gameState={gameState}
+                            words={words}
+                            getWordClass={getWordClass}
+                            wordRefs={wordRefs}
+                            lineIndexes={lineIndexes}
+                            currLineIndex={currLineIndex}
+                            input={input}
+                            handleInput={handleInput}
+                        />
+
+                        {/* <div className="main-container">
                             <div className="output-container">
                                 <div className="text sample">
                                     {words.map((word, i) => (
@@ -247,12 +251,16 @@ const Main: React.FC = () => {
                             <div className="input-container">
                                 <input disabled={gameState !== 'playing'} ref={textInput} type="text" onKeyDown={handleInput} value={input} />
                             </div>
-                        </div>
+                        </div> */}
                     </>
                 )
             }
 
-            <GameStateButton gameState={gameState} changeGameState={changeGameState} reset={reset} />
+            <GameStateButton
+                gameState={gameState}
+                changeGameState={changeGameState}
+                reset={reset}
+            />
 
             {
                 gameState === 'postgame' && (
