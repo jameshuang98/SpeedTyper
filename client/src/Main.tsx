@@ -233,25 +233,6 @@ const Main: React.FC = () => {
                             input={input}
                             handleInput={handleInput}
                         />
-
-                        {/* <div className="main-container">
-                            <div className="output-container">
-                                <div className="text sample">
-                                    {words.map((word, i) => (
-                                        <span key={i}>
-                                            <span className={getWordClass(i)} ref={wordRefs[i]}>
-                                                {word}
-                                            </span>
-                                            <span> </span>
-                                        </span>
-                                    )).slice(lineIndexes[currLineIndex])}
-                                </div>
-                            </div>
-
-                            <div className="input-container">
-                                <input disabled={gameState !== 'playing'} ref={textInput} type="text" onKeyDown={handleInput} value={input} />
-                            </div>
-                        </div> */}
                     </>
                 )
             }
