@@ -37,9 +37,6 @@ const Main: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        // for (const ref of wordRefs) {
-        //     console.log(ref.current.offsetTop)
-        // }
         getLineIndexes();
     }, [wordRefs]);
 
@@ -51,7 +48,6 @@ const Main: React.FC = () => {
     // Get the index of the first word of each line
     const getLineIndexes = () => {
         let indexObj: { [key: number]: number } = {};
-        console.log('wordRefs', wordRefs)
         for (const idx in wordRefs) {
             const offsetTop: number = wordRefs[idx]?.current?.offsetTop;
             if (offsetTop && !indexObj.hasOwnProperty(offsetTop)) {
@@ -59,7 +55,6 @@ const Main: React.FC = () => {
             }
         }
         const indexes = Object.values(indexObj);
-        console.log("indexes getLineIndexes", indexes)
 
         if (indexes.length > 0) {
             setLineIndexes(indexes)
@@ -83,6 +78,7 @@ const Main: React.FC = () => {
         // reset state
         setGameState("pregame");
         setCurrWordIndex(0);
+        setCurrLineIndex(0);
         setInput("");
         setInputWords([]);
         setCurrWordInput("");
@@ -93,8 +89,6 @@ const Main: React.FC = () => {
 
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
     const changeGameState = (state: GameStates): void => {
-        console.log("state", state)
-        console.log("interval", intervalRef.current)
         // start the game
         if (gameState !== "playing") {
             setGameState("playing");
@@ -116,7 +110,6 @@ const Main: React.FC = () => {
 
         // pause the game
         else if (state === "paused" && intervalRef.current) {
-            console.log("pause")
             clearInterval(intervalRef.current);
             setGameState("paused");
         }
@@ -129,14 +122,11 @@ const Main: React.FC = () => {
         if (!isValidKey(key) || (key === " " && input.slice(-1) === " ")) {
             return;
         }
-        // console.log('key', key)
 
         // Handle going to next word
         if (key === " ") {
             // Check if user is going to next line
             if ((currWordIndex + 1) === lineIndexes[currLineIndex + 1]) {
-                console.log('lineIndexes[currLineIndex + 1]', lineIndexes[currLineIndex + 1])
-                console.log('currWordIndex + 1', currWordIndex + 1)
                 setCurrLineIndex(prev => prev + 1)
             }
 
@@ -198,7 +188,6 @@ const Main: React.FC = () => {
         if (wordIdx > currWordIndex) {
             return "";
         }
-        console.log("currWordIndex", currWordIndex)
         if (wordIdx < currWordIndex) {
             return inputWords[wordIdx].isCorrect ? "past-word-correct" : "past-word-incorrect";
         }
@@ -228,11 +217,6 @@ const Main: React.FC = () => {
                     handleInput={handleInput}
                 />
             </>
-            <GameStateButton
-                gameState={gameState}
-                changeGameState={changeGameState}
-                reset={reset}
-            />
             {
                 gameState === 'postgame' && (
                     <Postgame
@@ -243,6 +227,11 @@ const Main: React.FC = () => {
                     />
                 )
             }
+            <GameStateButton
+                gameState={gameState}
+                changeGameState={changeGameState}
+                reset={reset}
+            />
         </div>
     );
 }
