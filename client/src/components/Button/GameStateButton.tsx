@@ -1,6 +1,6 @@
 import React, { MouseEventHandler } from 'react'
 import { GameStates } from '../../constants/types';
-import { IconButton } from '@mui/material';
+import { Button, IconButton, Typography } from '@mui/material';
 import { RestartAlt, PlayCircleFilled, PlayArrow, Pause } from '@mui/icons-material';
 
 import "./GameStateButton.scss";
@@ -54,6 +54,16 @@ const GameStateButton = (props: Props) => {
             <div className='game-state-text'>
               Paused
             </div>
+          </div>
+        )
+      }
+
+      {
+        gameState === 'postgame' && (
+          <div className="button-container">
+            <Button variant="contained" size="large" onClick={reset} startIcon={<RestartAlt/>}>
+              <Typography variant="subtitle2">Try again</Typography>
+            </Button>
           </div>
         )
       }
