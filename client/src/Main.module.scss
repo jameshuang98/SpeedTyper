@@ -1,0 +1,23 @@
+.main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.pastWordCorrect {
+    color: lightgreen;
+}
+
+.pastWordIncorrect {
+    background-color: lightcoral;
+}
+
+.correctSpelling {
+    background-color: #DCDCDC;
+}
+
+.incorrectSpelling {
+    background-color: red;
+}

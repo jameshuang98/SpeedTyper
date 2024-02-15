@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { Paper, Modal, Typography, Box, Fade, Backdrop } from '@mui/material'
-import "./Postgame.scss"
+import React, { useState } from 'react';
+import { Paper, Modal, Typography, Box, Fade, Backdrop } from '@mui/material';
+import classes from "./Postgame.module.scss";
 import ResultCard from 'components/ResultCard/ResultCard';
 
 type Props = {
@@ -8,7 +8,8 @@ type Props = {
     incorrectWords: number;
     characters: number;
     reset: Function;
-}
+};
+
 const style = {
     position: 'absolute' as 'absolute',
     top: '40%',
@@ -26,10 +27,10 @@ function Postgame({ correctWords, incorrectWords, characters, reset }: Props) {
     const handleReset = () => {
         setOpen(false);
         reset();
-    }
+    };
 
     return (
-        <div className="postgame-container">
+        <div className={classes.Container}>
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -65,12 +66,12 @@ function Postgame({ correctWords, incorrectWords, characters, reset }: Props) {
                 </Fade>
             </Modal>
 
-            <Paper className='stats'>
+            <Paper className={classes.stats}>
                 <Typography variant="h5">{correctWords} WPM</Typography>
                 <Typography variant="subtitle2">Accuracy: {Math.round((correctWords / (correctWords + incorrectWords)) * 100)}%</Typography>
             </Paper>
         </div>
     );
-}
+};
 
-export default Postgame
+export default Postgame;

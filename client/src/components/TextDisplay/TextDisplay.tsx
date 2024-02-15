@@ -1,5 +1,8 @@
-import { GameStates } from 'constants/types'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react';
+
+import classes from "./TextDisplay.module.scss";
+
+import { GameStates } from 'constants/types';
 
 type Props = {
     gameState: GameStates;
@@ -10,7 +13,7 @@ type Props = {
     currLineIndex: number;
     input: string;
     handleInput: React.KeyboardEventHandler<HTMLInputElement>
-}
+};
 
 function TextDisplay(props: Props) {
     const { gameState, words, getWordClass, wordRefs, lineIndexes, currLineIndex, input, handleInput } = props;
@@ -34,22 +37,22 @@ function TextDisplay(props: Props) {
 
     if (gameState === "playing") {
         formattedWords = formattedWords.slice(lineIndexes[currLineIndex]);
-    }
+    };
 
     return (
-        <div className="main-container">
-            <div className="output-container">
-                <div className="text sample" style={gameState === "postgame" ? { overflowY: "scroll" } : {}}>
+        <div className={classes.container}>
+            <div className={classes.outputContainer}>
+                <div className={classes.text} style={gameState === "postgame" ? { overflowY: "scroll" } : {}}>
                     {formattedWords}
                 </div>
             </div>
             {gameState !== "postgame" && (
-                <div className="input-container">
+                <div className={classes.inputContainer}>
                     <input disabled={gameState !== 'playing'} ref={textInput} type="text" onKeyDown={handleInput} value={input} />
                 </div>
             )}
         </div>
     )
-}
+};
 
-export default TextDisplay
+export default TextDisplay;

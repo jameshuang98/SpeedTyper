@@ -1,9 +1,9 @@
 import React, { MouseEventHandler } from 'react'
 import { GameStates } from '../../constants/types';
+import classes from "./GameStateButton.module.scss";
+
 import { Button, IconButton, Typography } from '@mui/material';
 import { RestartAlt, PlayCircleFilled, PlayArrow, Pause } from '@mui/icons-material';
-
-import "./GameStateButton.scss";
 
 
 type Props = {
@@ -19,11 +19,11 @@ const GameStateButton = (props: Props) => {
     <>
       {
         gameState === 'pregame' && (
-          <div className="button-container">
-            <IconButton aria-label="play" size="large" className='icon-button' style={{ backgroundColor: gameState === 'pregame' ? "#7cb342" : "#26a69a" }} onClick={() => changeGameState("playing")}>
+          <div className={classes.buttonContainer}>
+            <IconButton aria-label="play" size="large" className={classes.iconButton} style={{ backgroundColor: gameState === 'pregame' ? "#7cb342" : "#26a69a" }} onClick={() => changeGameState("playing")}>
               <PlayArrow fontSize="inherit" />
             </IconButton>
-            <IconButton aria-label="restart" size="large" className='icon-button' style={{ backgroundColor: "#0288d1" }} onClick={reset}>
+            <IconButton aria-label="restart" size="large" className={classes.iconButton} style={{ backgroundColor: "#0288d1" }} onClick={reset}>
               <RestartAlt fontSize="inherit" />
             </IconButton>
           </div>
@@ -32,8 +32,8 @@ const GameStateButton = (props: Props) => {
 
       {
         gameState === 'playing' && (
-          <div className="button-container">
-            <IconButton aria-label="play" size="large" className='icon-button' style={{ backgroundColor: "#f44336" }} onClick={() => changeGameState("paused")}>
+          <div className={classes.buttonContainer}>
+            <IconButton aria-label="play" size="large" className={classes.iconButton} style={{ backgroundColor: "#f44336" }} onClick={() => changeGameState("paused")}>
               <Pause fontSize="inherit" />
             </IconButton>
           </div>
@@ -42,16 +42,16 @@ const GameStateButton = (props: Props) => {
 
       {
         gameState === 'paused' && (
-          <div className='column-container'>
-            <div className="button-container">
-              <IconButton aria-label="play" size="large" className='icon-button' style={{ backgroundColor: "#26a69a" }} onClick={() => changeGameState("playing")}>
+          <div className={classes.columnContainer}>
+            <div className={classes.buttonContainer}>
+              <IconButton aria-label="play" size="large" className={classes.iconButton} style={{ backgroundColor: "#26a69a" }} onClick={() => changeGameState("playing")}>
                 <PlayArrow fontSize="inherit" />
               </IconButton>
-              <IconButton aria-label="restart" size="large" className='icon-button' style={{ backgroundColor: "#0288d1" }} onClick={reset}>
+              <IconButton aria-label="restart" size="large" className={classes.iconButton} style={{ backgroundColor: "#0288d1" }} onClick={reset}>
                 <RestartAlt fontSize="inherit" />
               </IconButton>
             </div>
-            <div className='game-state-text'>
+            <div className={classes.paused}>
               Paused
             </div>
           </div>
@@ -60,7 +60,7 @@ const GameStateButton = (props: Props) => {
 
       {
         gameState === 'postgame' && (
-          <div className="button-container">
+          <div className={classes.buttonContainer}>
             <Button variant="contained" size="large" onClick={reset} startIcon={<RestartAlt/>}>
               <Typography variant="subtitle2">Try again</Typography>
             </Button>

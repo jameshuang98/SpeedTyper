@@ -4,7 +4,7 @@ import { GameStates, InputWord } from 'constants/types';
 import Appbar from 'components/Appbar/Appbar';
 import GameStateButton from 'components/Button/GameStateButton';
 
-import './Main.scss';
+import classes from './Main.module.scss';
 import samples from './constants/samples'
 import isValidKey from './helpers';
 import Postgame from 'components/Postgame/Postgame';
@@ -188,21 +188,22 @@ const Main: React.FC = () => {
         if (wordIdx > currWordIndex) {
             return "";
         }
+
         if (wordIdx < currWordIndex) {
-            return inputWords[wordIdx].isCorrect ? "past-word-correct" : "past-word-incorrect";
+            return inputWords[wordIdx].isCorrect ? classes.pastWordCorrect : classes.pastWordIncorrect;
         }
 
         const wordToCompare = words[wordIdx];
         const isMatch = wordToCompare.startsWith(currWordInput.trim()) || wordToCompare === currWordInput.trim();
         if (isMatch) {
-            return "correct-spelling"
+            return classes.correctSpelling;
         } else {
-            return "incorrect-spelling"
+            return classes.incorrectSpelling;
         }
-    }
+    };
 
     return (
-        <div className="main">
+        <div className={classes.main}>
             <Appbar />
             <>
                 <Countdown countdown={countdown} />

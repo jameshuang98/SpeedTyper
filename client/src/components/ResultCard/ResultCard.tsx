@@ -1,6 +1,8 @@
 import React, { MouseEventHandler } from 'react'
+
+import classes from "./ResultCard.module.scss"
+
 import { Paper, Divider, IconButton, Button } from '@mui/material'
-import "./ResultCard.scss"
 import { RestartAlt } from '@mui/icons-material';
 
 type Props = {
@@ -17,25 +19,25 @@ function ResultCard(props: Props) {
   const accuracy = Math.round((correctWords / (correctWords + incorrectWords)) * 100);
 
   return (
-    <Paper elevation={3} className='result-card' style={style}>
-      <div className="header">
+    <Paper elevation={3} className={classes.card} style={style}>
+      <div className={classes.header}>
         Result
       </div>
-      <div className="wpm">
+      <div className={classes.wpm}>
         {correctWords} WPM
       </div>
       <Divider />
-      <div className="stat">
+      <div className={classes.stats}>
         Accuracy: {accuracy}%
       </div>
-      <div className="stat">
+      <div className={classes.stats}>
         Typos: {incorrectWords}
       </div>
-      <div className="stat">
+      <div className={classes.stats}>
         Characters: {characters}
       </div>
-      <div className="postgame-buttons">
-        <IconButton aria-label="restart" size="small" className='icon-button' style={{ backgroundColor: "#0288d1" }} onClick={reset}>
+      <div className={classes.buttons}>
+        <IconButton aria-label="restart" size="small" style={{ backgroundColor: "#0288d1" }} onClick={reset}>
           <RestartAlt fontSize="inherit" />
         </IconButton>
         <Button variant="contained" size="small" onClick={checkResult}>

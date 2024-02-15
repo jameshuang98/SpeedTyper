@@ -1,10 +1,10 @@
 import React from 'react';
-import './Appbar.scss';
+import classes from './Appbar.module.scss';
 import { AppBar, Toolbar, Typography } from '@mui/material';
 
 function Appbar() {
     return (
-        <div className="appbar">
+        <div className={classes.appbar}>
             <AppBar position="static">
                 <Toolbar>
                     <Typography variant="body1" component="div" className="appbar">

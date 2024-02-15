@@ -1,11 +1,18 @@
-.button-container {
+.buttonContainer {
     margin-top: 1rem;
     display: flex;
     flex-direction: row;
     gap: 20px;
 }
 
-.icon-button {
+.columnContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .2rem;
+}
+
+.iconButton {
     border-radius: 10px !important;
     color: white !important;
     padding: .38rem !important;
@@ -14,6 +21,6 @@
     }
 }
 
-.game-state-text {
+.paused {
     color: #ffb74d;
 }
