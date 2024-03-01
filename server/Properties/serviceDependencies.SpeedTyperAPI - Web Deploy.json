@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/SpeedTyperAPI/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsAZURE_SQL_CONNECTIONSTR_09587A02C3",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/jameshuangdevelopment/databases/SpeedTyper",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:AZURE_SQL_CONNECTIONSTRING",
+      "dynamicId": null
+    }
+  }
+}

@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using server.Repositories;
 
 namespace server
@@ -21,15 +22,12 @@ namespace server
             var connection = String.Empty;
             if (builder.Environment.IsDevelopment())
             {
-                System.Diagnostics.Debug.WriteLine("hello");
-                builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.Development.json");
+                //builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.Development.json");
                 connection = builder.Configuration.GetConnectionString("LOCAL_SQL_CONNECTIONSTRING");
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("hello2");
-
-                connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
+                connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
             }
 
             builder.Services.AddDbContext<SpeedTyperDbContext>(options => options.UseSqlServer(connection));
@@ -37,6 +35,17 @@ namespace server
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IScoreRepository, ScoreRepository>();
 
+            builder.Services.AddCors(options =>
+            {
+                var allowedOrigins = builder.Configuration.GetSection("AllowedCorsOrigins").Get<string[]>();
+                options.AddPolicy("AllowCors",
+                    builder =>
+                    {
+                        builder.WithOrigins(allowedOrigins ?? [])
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
 
             var app = builder.Build();
 
@@ -53,6 +62,8 @@ namespace server
 
 
             app.MapControllers();
+
+            app.UseCors("AllowCors");
 
             app.Run();
         }
