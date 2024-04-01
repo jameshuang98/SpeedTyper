@@ -3,9 +3,10 @@ import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "./App.scss";
-import Main from "./pages/Main";
-import ScoreHistory from "./pages/ScoreHistory";
-import NotFound from "pages/NotFound";
+import Main from "./pages/Main/Main";
+import ScoreHistory from "./pages/ScoreHistory/ScoreHistory";
+import NotFound from "pages/NotFound/NotFound";
+import SignIn from "pages/SignIn/SignIn";
 
 function App() {
 
@@ -18,6 +19,10 @@ function App() {
     {
       path: '/scores',
       element: <ScoreHistory />
+    },
+    {
+      path: '/login',
+      element: <SignIn />
     }
   ]);
 

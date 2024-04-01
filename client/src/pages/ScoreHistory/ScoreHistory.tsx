@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Typography } from '@mui/material'
 import axios from 'axios';
-import API_BASE_URL from "../constants/constants.js";
+import API_BASE_URL from "../../constants/constants.js";
 
 
 type Props = {};

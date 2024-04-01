@@ -5,8 +5,8 @@ import Appbar from 'components/Appbar/Appbar';
 import GameStateButton from 'components/Button/GameStateButton';
 
 import classes from './Main.module.scss';
-import samples from '../constants/samples'
-import isValidKey from '../helpers';
+import samples from '../../constants/samples'
+import isValidKey from '../../helpers';
 import Postgame from 'components/Postgame/Postgame';
 import TextDisplay from 'components/TextDisplay/TextDisplay';
 import Countdown from 'components/Countdown/Countdown';
