@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
-import { Paper, Modal, Typography, Box, Fade, Backdrop } from '@mui/material';
+import React from 'react';
+import { Modal, Box, Fade, Backdrop, IconButton, Button } from '@mui/material';
 import classes from "./Postgame.module.scss";
 import ResultCard from 'components/ResultCard/ResultCard';
+import { RestartAlt } from '@mui/icons-material';
 
 type Props = {
     correctWords: number;
     incorrectWords: number;
     characters: number;
     reset: Function;
+    open: boolean;
+    setOpen: (open: boolean) => void;
 };
 
 const style = {
@@ -21,8 +24,7 @@ const style = {
     boxShadow: 24,
 };
 
-function Postgame({ correctWords, incorrectWords, characters, reset }: Props) {
-    const [open, setOpen] = useState(true);
+function Postgame({ correctWords, incorrectWords, characters, reset, open, setOpen }: Props) {
     const handleClose = () => setOpen(false);
     const handleReset = () => {
         setOpen(false);
@@ -54,22 +56,20 @@ function Postgame({ correctWords, incorrectWords, characters, reset }: Props) {
                             correctWords={correctWords}
                             incorrectWords={incorrectWords}
                             characters={characters}
-                            reset={handleReset}
-                            checkResult={handleClose}
-                            style={{
-                                position: 'absolute' as 'absolute',
-                                top: '0%',
-                                left: '0%',
-                            }}
+                            buttons={
+                                <>
+                                    <IconButton aria-label="restart" size="small" sx={{ backgroundColor: "#0288d1", color: "white" }} disableRipple={true} onClick={handleReset}>
+                                        <RestartAlt fontSize="inherit" />
+                                    </IconButton>
+                                    <Button variant="contained" size="small" onClick={handleClose}>
+                                        <p style={{ fontSize: ".7rem" }}>Check Result</p>
+                                    </Button>
+                                </>
+                            }
                         />
                     </Box>
                 </Fade>
             </Modal>
-
-            <Paper className={classes.stats}>
-                <Typography variant="h5">{correctWords} WPM</Typography>
-                <Typography variant="subtitle2">Accuracy: {Math.round((correctWords / (correctWords + incorrectWords)) * 100)}%</Typography>
-            </Paper>
         </div>
     );
 };

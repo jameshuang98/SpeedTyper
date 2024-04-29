@@ -1,25 +1,22 @@
-import React, { MouseEventHandler } from 'react'
+import React, { ReactNode } from 'react'
 
 import classes from "./ResultCard.module.scss"
 
-import { Paper, Divider, IconButton, Button } from '@mui/material'
-import { RestartAlt } from '@mui/icons-material';
+import { Paper, Divider } from '@mui/material'
 
 type Props = {
   correctWords: number;
   incorrectWords: number;
   characters: number;
-  reset: MouseEventHandler<HTMLButtonElement>;
-  checkResult: MouseEventHandler<HTMLButtonElement>;
-  style: any;
+  buttons: ReactNode | null;
 }
 
 function ResultCard(props: Props) {
-  const { correctWords, incorrectWords, characters, reset, checkResult, style } = props;
+  const { correctWords, incorrectWords, characters, buttons } = props;
   const accuracy = Math.round((correctWords / (correctWords + incorrectWords)) * 100);
 
   return (
-    <Paper elevation={3} className={classes.card} style={style}>
+    <Paper elevation={3} className={classes.card}>
       <div className={classes.header}>
         Result
       </div>
@@ -27,22 +24,15 @@ function ResultCard(props: Props) {
         {correctWords} WPM
       </div>
       <Divider />
-      <div className={classes.stats}>
-        Accuracy: {accuracy}%
-      </div>
-      <div className={classes.stats}>
-        Typos: {incorrectWords}
-      </div>
-      <div className={classes.stats}>
-        Characters: {characters}
-      </div>
-      <div className={classes.buttons}>
-        <IconButton aria-label="restart" size="small" style={{ backgroundColor: "#0288d1" }} onClick={reset}>
-          <RestartAlt fontSize="inherit" />
-        </IconButton>
-        <Button variant="contained" size="small" onClick={checkResult}>
-          <p style={{ fontSize: ".7rem" }}>Check Result</p>
-        </Button>
+      <div className={classes.content}>
+        <div className={classes.stat}>
+          <p>Accuracy: {accuracy}%</p>
+          <p>Typos: {incorrectWords}</p>
+          <p>Characters: {characters}</p>
+        </div>
+          <div className={classes.buttons}>
+            {buttons}
+          </div>
       </div>
     </Paper>
   )
