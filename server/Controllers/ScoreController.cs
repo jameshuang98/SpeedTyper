@@ -16,7 +16,7 @@ namespace server.Controllers
             _scoreRepository = scoreRepository;
         }
 
-        [HttpGet("GetScores")]
+        [HttpGet()]
         public async Task<ActionResult<IEnumerable<Score>>> GetScores()
         {
             var scores = await _scoreRepository.GetScores();
