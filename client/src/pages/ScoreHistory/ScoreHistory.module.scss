@@ -1,0 +1,31 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    padding: 1rem;
+    font-weight: bold;
+}
+
+.buttonGroup {
+    align-self: flex-end;
+    margin-right: 1rem;
+}
+
+.carouselContainer {
+    width: 80%;
+    // padding: 
+    margin: auto;
+    margin-top: 3rem;
+}
+
+.carouselItem {
+    padding-left: 10px;
+}
+
+.slider {
+    padding-bottom: 2rem;
+}
+
+.dotList {}
