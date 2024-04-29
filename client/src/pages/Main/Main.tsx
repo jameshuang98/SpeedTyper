@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, createRef } from 'react';
-import { GameStates, InputWord } from 'constants/types';
+import { GameState, InputWord } from 'constants/types';
 
-import Appbar from 'components/Appbar/Appbar';
 import GameStateButton from 'components/Button/GameStateButton';
 
 import classes from './Main.module.scss';
@@ -10,14 +9,16 @@ import isValidKey from '../../helpers';
 import Postgame from 'components/Postgame/Postgame';
 import TextDisplay from 'components/TextDisplay/TextDisplay';
 import Countdown from 'components/Countdown/Countdown';
+import { Typography } from '@mui/material';
 
 // Constants
-const timeLimit = 60;
+const timeLimit = 3;
 
 const Main: React.FC = () => {
 
     const [countdown, setCountdown] = useState<number>(timeLimit);
-    const [gameState, setGameState] = useState<GameStates>('pregame');
+    const [gameState, setGameState] = useState<GameState>('pregame');
+    const [openModal, setOpenModal] = useState(false);
 
     const [words, setWords] = useState<string[]>([]);
     const [currWordIndex, setCurrWordIndex] = useState<number>(0);
@@ -88,7 +89,7 @@ const Main: React.FC = () => {
     }
 
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
-    const changeGameState = (state: GameStates): void => {
+    const changeGameState = (state: GameState): void => {
         // start the game
         if (gameState !== "playing") {
             setGameState("playing");
@@ -100,6 +101,7 @@ const Main: React.FC = () => {
                             clearInterval(intervalRef.current);
                         }
                         setGameState("postgame");
+                        setOpenModal(true);
                         return timeLimit;
                     } else {
                         return prev - 1;
@@ -202,22 +204,50 @@ const Main: React.FC = () => {
         }
     };
 
+    // Calculating WPM based on gameState
+    let WPM;
+    switch (gameState) {
+        case 'pregame':
+            WPM = 0;
+            break;
+        case 'postgame':
+            WPM = correctWords;
+            break;
+        default:
+            WPM = timeLimit === countdown ? 0 : Math.floor((correctWords / (timeLimit - countdown)) * timeLimit);
+    };
+
     return (
         <div className={classes.main}>
-            <Appbar />
-            <>
-                <Countdown countdown={countdown} />
-                <TextDisplay
-                    gameState={gameState}
-                    words={words}
-                    getWordClass={getWordClass}
-                    wordRefs={wordRefs}
-                    lineIndexes={lineIndexes}
-                    currLineIndex={currLineIndex}
-                    input={input}
-                    handleInput={handleInput}
-                />
-            </>
+            <Countdown countdown={countdown} />
+            <TextDisplay
+                gameState={gameState}
+                words={words}
+                getWordClass={getWordClass}
+                wordRefs={wordRefs}
+                lineIndexes={lineIndexes}
+                currLineIndex={currLineIndex}
+                input={input}
+                handleInput={handleInput}
+            />
+            <div className={classes.stats}>
+
+                {!openModal &&
+                    <>
+                        <Typography variant="h5">WPM: {WPM}</Typography>
+                        {
+                            gameState === 'postgame' &&
+                            (
+                                <>
+                                    <Typography variant="subtitle2">Accuracy: {Math.round((correctWords / (correctWords + incorrectWords)) * 100)}%</Typography>
+                                    <Typography variant="subtitle2">Typos: {incorrectWords}</Typography>
+                                    <Typography variant="subtitle2">Characters: {input.length}</Typography>
+                                </>
+                            )
+                        }
+                    </>
+                }
+            </div>
             {
                 gameState === 'postgame' && (
                     <Postgame
@@ -225,6 +255,8 @@ const Main: React.FC = () => {
                         incorrectWords={incorrectWords}
                         characters={input.length}
                         reset={reset}
+                        open={openModal}
+                        setOpen={setOpenModal}
                     />
                 )
             }

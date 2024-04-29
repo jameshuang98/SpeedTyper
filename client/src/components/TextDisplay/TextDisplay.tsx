@@ -2,10 +2,10 @@ import React, { useEffect, useRef } from 'react';
 
 import classes from "./TextDisplay.module.scss";
 
-import { GameStates } from 'constants/types';
+import { GameState } from 'constants/types';
 
 type Props = {
-    gameState: GameStates;
+    gameState: GameState;
     words: Array<string>;
     getWordClass: Function;
     wordRefs: Array<any>;

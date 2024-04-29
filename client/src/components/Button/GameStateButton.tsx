@@ -1,5 +1,5 @@
 import React, { MouseEventHandler } from 'react'
-import { GameStates } from '../../constants/types';
+import { GameState } from '../../constants/types';
 import classes from "./GameStateButton.module.scss";
 
 import { Button, IconButton, Typography } from '@mui/material';
@@ -7,7 +7,7 @@ import { RestartAlt, PlayCircleFilled, PlayArrow, Pause } from '@mui/icons-mater
 
 
 type Props = {
-  gameState: GameStates
+  gameState: GameState
   changeGameState: Function
   reset: MouseEventHandler<HTMLButtonElement>
 }

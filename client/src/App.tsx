@@ -7,6 +7,7 @@ import Main from "./pages/Main/Main";
 import ScoreHistory from "./pages/ScoreHistory/ScoreHistory";
 import NotFound from "pages/NotFound/NotFound";
 import SignIn from "pages/SignIn/SignIn";
+import Appbar from "components/Appbar/Appbar";
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
 
   return (
     <div>
+      <Appbar />
       <RouterProvider router={router}/>
     </div>
   );
