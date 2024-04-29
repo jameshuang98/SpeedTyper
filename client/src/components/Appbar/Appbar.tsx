@@ -4,15 +4,13 @@ import { AppBar, Toolbar, Typography } from '@mui/material';
 
 function Appbar() {
     return (
-        <div className={classes.appbar}>
-            <AppBar position="static">
-                <Toolbar>
-                    <Typography variant="body1" component="div" className="appbar">
-                        SpeedTyper
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-        </div>
+        <AppBar position="static" className={classes.appbar}>
+            <Toolbar>
+                <Typography variant="body1" component="div" className={classes.appName}>
+                    SpeedTyper
+                </Typography>
+            </Toolbar>
+        </AppBar>
     )
 };
 

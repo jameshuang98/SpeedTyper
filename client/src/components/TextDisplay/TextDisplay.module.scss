@@ -1,10 +1,11 @@
 .container {
     margin-top: 4rem;
+    margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #616161;
+    background-color: #f0ece6;
     size: 12px;
     width: 50%;
 }
@@ -30,6 +31,7 @@
 .inputContainer {
     margin-top: 4rem;
     width: 40%;
+    min-width: 250px;
     background-color: #FFFFFF;
 }
 
