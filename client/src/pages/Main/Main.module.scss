@@ -6,6 +6,16 @@
     justify-content: center;
 }
 
+.content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.stats {
+    margin: 1rem;
+}
+
 .pastWordCorrect {
     color: lightgreen;
 }
@@ -20,4 +30,13 @@
 
 .incorrectSpelling {
     background-color: red;
+}
+
+
+@media screen and (min-width: 768px) {
+    .stats {
+        position: absolute;
+        top: 7rem;
+        left: .8rem;
+    }
 }
