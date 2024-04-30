@@ -5,6 +5,7 @@ import classes from "./ResultCard.module.scss"
 import { Paper, Divider } from '@mui/material'
 
 type Props = {
+  title: string;
   correctWords: number;
   incorrectWords: number;
   characters: number;
@@ -12,13 +13,13 @@ type Props = {
 }
 
 function ResultCard(props: Props) {
-  const { correctWords, incorrectWords, characters, buttons } = props;
+  const { title, correctWords, incorrectWords, characters, buttons } = props;
   const accuracy = Math.round((correctWords / (correctWords + incorrectWords)) * 100);
 
   return (
     <Paper elevation={3} className={classes.card}>
       <div className={classes.header}>
-        Result
+        {title}
       </div>
       <div className={classes.wpm}>
         {correctWords} WPM

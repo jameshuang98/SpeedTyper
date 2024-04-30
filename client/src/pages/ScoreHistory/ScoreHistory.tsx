@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
-import { Button, ButtonGroup, CircularProgress, Typography } from '@mui/material'
+import React, { useState } from 'react';
 import axios from 'axios';
-import API_BASE_URL from "../../constants/constants.js";
-import useService from 'hooks/useService';
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
+import { Button, ButtonGroup, CircularProgress } from '@mui/material';
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
+
 import ResultCard from 'components/ResultCard/ResultCard';
-import classes from "./ScoreHistory.module.scss"
+import useService from 'hooks/useService';
 import { SortOption, ScoreItem } from 'constants/types.js';
+import API_BASE_URL from '../../constants/constants.js';
+
+import classes from './ScoreHistory.module.scss';
 
 const responsive = {
     ultraWideScreen: {
@@ -78,6 +80,7 @@ export default function ScoreHistory() {
             .map((s: ScoreItem, i) => (
                 <ResultCard
                     key={i}
+                    title={(new Date(s.createdDate)).toLocaleDateString(undefined, { month: 'short', day: '2-digit', year: 'numeric' })}
                     correctWords={s.correctWords}
                     incorrectWords={s.incorrectWords}
                     characters={s.characters}

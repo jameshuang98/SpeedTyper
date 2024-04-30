@@ -53,6 +53,7 @@ function Postgame({ correctWords, incorrectWords, characters, reset, open, setOp
                 <Fade in={open}>
                     <Box sx={style}>
                         <ResultCard
+                            title="Result"
                             correctWords={correctWords}
                             incorrectWords={incorrectWords}
                             characters={characters}
