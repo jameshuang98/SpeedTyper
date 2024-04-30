@@ -2,7 +2,13 @@
     background-color: #4056A1 !important;
 }
 
+.toolbar {
+    padding-left: .5rem !important;
+}
+
 .appName {
     font-family: Verdana, Geneva, Tahoma, sans-serif !important;
     font-size: 1rem;
+    cursor: pointer;
+    padding: .6rem;
 }
