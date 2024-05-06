@@ -1,6 +1,6 @@
-﻿namespace server.Entities;
+﻿namespace server.Models.DTOs;
 
-public class Score
+public class ScoreDTO
 {
     public int Id { get; set; }
     public int UserId { get; set; }
@@ -8,8 +8,4 @@ public class Score
     public int IncorrectWords { get; set; }
     public int Characters { get; set; }
     public DateTime CreatedDate { get; set; }
-
-    
-    //[ForeignKey("UserId")]
-    public User? User { get ; set; }
 }
