@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Button, ButtonGroup, CircularProgress } from '@mui/material';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 
 import ResultCard from 'components/ResultCard/ResultCard';
 import useService from 'hooks/useService';
+import { getScores } from 'api/scores';
 import { SortOption, ScoreItem } from 'constants/types.js';
-import API_BASE_URL from '../../constants/constants.js';
 
 import classes from './ScoreHistory.module.scss';
 
@@ -34,18 +33,6 @@ const responsive = {
         breakpoint: { max: 464, min: 0 },
         items: 1
     }
-};
-
-
-const getScores = async (): Promise<ScoreItem[]> => {
-    return axios.get(`${API_BASE_URL}score`)
-        .then(response => {
-            console.log("response", response);
-            return response.data;
-        })
-        .catch(error => {
-            console.log(error)
-        });
 };
 
 export default function ScoreHistory() {
