@@ -1,5 +1,5 @@
-﻿using server.DTOs;
-using server.Entities;
+﻿using server.Models.DTOs;
+using server.Models.Entities;
 
 namespace server.Extensions;
 

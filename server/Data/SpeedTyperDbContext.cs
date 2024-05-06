@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using server.Entities;
+using server.Models.Entities;
 
 public class SpeedTyperDbContext : DbContext
 {
