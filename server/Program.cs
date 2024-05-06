@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using server.Repositories;
+using server.Services;
+using server.Services.Interfaces;
 
 namespace server
 {
@@ -34,6 +36,8 @@ namespace server
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IScoreRepository, ScoreRepository>();
+            builder.Services.AddScoped<IPasswordService, PasswordService>();
+
 
             builder.Services.AddCors(options =>
             {
