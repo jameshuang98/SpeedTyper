@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using server.Entities;
+using server.Models.Entities;
 using server.Repositories;
 
 public class ScoreRepository: IScoreRepository
@@ -19,7 +19,7 @@ public class ScoreRepository: IScoreRepository
         return await _context.Scores.Where(s => s.UserId == id).ToListAsync();
     }
 
-    public async Task<Score> GetScoreById(int id)
+    public async Task<Score?> GetScoreById(int id)
     {
         return await _context.Scores.FindAsync(id);
     }

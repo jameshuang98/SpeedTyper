@@ -1,52 +1,83 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using server.Entities;
+using server.Models;
+using server.Models.Entities;
+using server.Services.Interfaces;
 namespace server.Repositories;
 
 public class UserRepository : IUserRepository
 {
     private readonly SpeedTyperDbContext _context;
-    public UserRepository(SpeedTyperDbContext speedTyperDbContext)
+    private IPasswordService _passwordService;
+    public UserRepository(SpeedTyperDbContext speedTyperDbContext, IPasswordService passwordService)
     {
         _context = speedTyperDbContext;
-
+        _passwordService = passwordService;
     }
+
     public async Task<IEnumerable<User>> GetUsers()
     {
         return await _context.Users.ToListAsync();
     }
-    public async Task<User> GetUserById(int id)
+
+    public async Task<User?> GetUserById(int id)
     {
-        return await _context.Users.FindAsync(id);
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+        {
+            return null;
+        }
+        return user;
     }
 
-    public async Task<User> CreateUser(User user)
+    public async Task<User?> DeleteUser(int id)
     {
-        var result = await _context.Users.AddAsync(user);
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+        {
+            return null;
+        }
+        _context.Users.Remove(user);
         await _context.SaveChangesAsync();
-        return result.Entity;
+        return user;
     }
 
-    public async Task<User> DeleteUser(int id)
+    public async Task<User?> UpdateUser(User updatedUser)
     {
-        var result = await _context.Users.FindAsync(id);
-        if (result != null)
+        var user = await _context.Users.FindAsync(updatedUser.Id);
+
+        if (user == null)
         {
-            _context.Users.Remove(result);
-            await _context.SaveChangesAsync();
+            return null;
         }
-        return result;
+        user.FirstName = updatedUser.FirstName ?? user.FirstName;
+        user.LastName = updatedUser.LastName ?? user.LastName;
+        user.Username = updatedUser.Username ?? user.Username;
+        user.Email = updatedUser.Email ?? user.Email;
+        user.ProfileImageURL = updatedUser.ProfileImageURL ?? user.ProfileImageURL;
+
+        await _context.SaveChangesAsync();
+        return user;
     }
-
-    public async Task<User> UpdateUser(User user)
+    public async Task<User> RegisterUser(UserRegistrationRequest userRegistrationRequest)
     {
-        var result = await _context.Users.FindAsync(user.Id);
-
-        if (result != null)
+        var newUser = new User
         {
-            result = user;
-            await _context.SaveChangesAsync();
+            FirstName = userRegistrationRequest.FirstName,
+            LastName = userRegistrationRequest.LastName,
+            Email = userRegistrationRequest.Email,
+            Password = _passwordService.HashPassword(userRegistrationRequest.Password)
+        };
+        var user = await _context.Users.AddAsync(newUser);
+        await _context.SaveChangesAsync();
+        return user.Entity;
+    }
+    public async Task<bool?> LoginUser(UserLoginRequest userRequest)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userRequest.Email);
+        if (user == null)
+        {
+            return null;
         }
-
-        return result;
+        return _passwordService.VerifyPassword(userRequest.Password, user.Password);
     }
 }
