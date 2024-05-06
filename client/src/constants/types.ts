@@ -15,3 +15,24 @@ export interface ScoreItem {
 }
 
 export type SortOption = "recent" | "highest"
+
+export interface User {
+    id: number,
+    firstName: string,
+    lastName: string,
+    username: string,
+    email: string,
+    profileImageURL: string
+}
+
+export interface UserLoginRequest {
+    email: string,
+    password: string
+}
+
+export interface UserRegistrationRequest {
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string
+}
