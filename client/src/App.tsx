@@ -7,8 +7,10 @@ import ScoreHistory from "./pages/ScoreHistory/ScoreHistory";
 import NotFound from "pages/NotFound/NotFound";
 import SignIn from "pages/SignIn/SignIn";
 import SignUp from "pages/SignUp/SignUp";
+import { SnackbarProvider } from './contexts/SnackbarContext';
 
 import "./App.scss";
+
 
 function App() {
   const router = createBrowserRouter([
@@ -47,7 +49,9 @@ function App() {
 
   return (
     <React.StrictMode>
-      <RouterProvider router={router} />
+      <SnackbarProvider>
+        <RouterProvider router={router} />
+      </SnackbarProvider>
     </React.StrictMode>
   );
 }
