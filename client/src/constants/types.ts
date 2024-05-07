@@ -36,3 +36,8 @@ export interface UserRegistrationRequest {
     email: string,
     password: string
 }
+
+export interface ApiResponse {
+    statusCode: number,
+    data: any
+}
