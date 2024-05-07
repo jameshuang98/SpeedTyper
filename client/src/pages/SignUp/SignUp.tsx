@@ -3,20 +3,22 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { useNavigate } from 'react-router-dom';
 
-import useService from 'hooks/useService';
 import { registerUser } from 'api/users';
 import { UserRegistrationRequest } from 'constants/types';
+import { useSnackbar } from 'contexts/SnackbarContext';
 
 export default function SignUp() {
+  const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -27,8 +29,11 @@ export default function SignUp() {
       password: data.get('password') as string
     };
 
-    const user = await registerUser(userRegistrationRequest);
-    console.log("user:", user)
+    const registerResponse = await registerUser(userRegistrationRequest);
+    if (registerResponse && registerResponse.statusCode === 201) {
+      showSnackbar("Registration Successful");
+      navigate("/");
+    }
   };
 
   return (

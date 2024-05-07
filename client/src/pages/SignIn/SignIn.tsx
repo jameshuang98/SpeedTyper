@@ -42,9 +42,8 @@ export default function SignIn() {
       password: data.get('password') as string
     };
 
-    const loginResult = await loginUser(userLoginRequest);
-    console.log("loginResult", loginResult);
-    if (loginResult) {
+    const loginResponse = await loginUser(userLoginRequest);
+    if (loginResponse && loginResponse.statusCode === 200) {
       showSnackbar("Login Successful");
       navigate("/");
     }
