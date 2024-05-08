@@ -3,7 +3,7 @@ import { Alert, Fade, Snackbar } from "@mui/material";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 interface SnackbarContextType {
-    showSnackbar: (message: string) => void;
+    showSnackbar: (message: string, newIcon: ReactNode) => void;
     hideSnackbar: () => void;
 }
 
@@ -24,10 +24,14 @@ interface Props {
 export function SnackbarProvider({ children }: Props) {
     const [message, setMessage] = useState('');
     const [isVisible, setIsVisible] = useState(false);
+    const [icon, setIcon] = useState<ReactNode>(<CheckCircleOutlineIcon fontSize="small" />)
 
-    const showSnackbar = (newMessage: string) => {
+    const showSnackbar = (newMessage: string, newIcon: ReactNode) => {
         setMessage(newMessage);
         setIsVisible(true);
+        if (newIcon) {
+            setIcon(newIcon)
+        }
     };
 
     const hideSnackbar = () => {
@@ -48,7 +52,7 @@ export function SnackbarProvider({ children }: Props) {
                     }
                 }}
             >
-                <Alert icon={<CheckCircleOutlineIcon fontSize="small" />} variant="filled" severity="success">
+                <Alert icon={icon} variant="filled" severity="success">
                     {message}
                 </Alert>
             </Snackbar>

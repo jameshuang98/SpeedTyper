@@ -10,6 +10,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 import { registerUser } from 'api/users';
 import { UserRegistrationRequest } from 'constants/types';
@@ -31,7 +32,7 @@ export default function SignUp() {
 
     const registerResponse = await registerUser(userRegistrationRequest);
     if (registerResponse && registerResponse.statusCode === 201) {
-      showSnackbar("Registration Successful");
+      showSnackbar("Registration Successful", <CheckCircleOutlineIcon fontSize="small" />);
       navigate("/");
     };
   };

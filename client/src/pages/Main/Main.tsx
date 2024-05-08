@@ -12,7 +12,7 @@ import Countdown from 'components/Countdown/Countdown';
 import { Typography } from '@mui/material';
 
 // Constants
-const timeLimit = 3;
+const timeLimit = 60;
 
 const Main: React.FC = () => {
 
