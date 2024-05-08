@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography } from '@mui/material';
+import { AppBar, Button, Toolbar, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import classes from './Appbar.module.scss';
@@ -13,6 +13,7 @@ function Appbar() {
                 <Typography variant="body1" component="div" className={classes.appName} onClick={() => navigate("/")}>
                     SpeedTyper
                 </Typography>
+                <Button href="/login" className={classes.loginButton}>Login</Button>
             </Toolbar>
         </AppBar>
     )
