@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,23 +16,10 @@ import { loginUser } from 'api/users';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'contexts/SnackbarContext';
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-
 export default function SignIn() {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
+  const [loginError, setLoginError] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -46,6 +33,8 @@ export default function SignIn() {
     if (loginResponse && loginResponse.statusCode === 200) {
       showSnackbar("Login Successful");
       navigate("/");
+    } else {
+      setLoginError(true);
     }
   };
 
@@ -71,7 +60,7 @@ export default function SignIn() {
           <Box
             sx={{
               my: 8,
-              mx: 4,
+              mx: 8,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -83,7 +72,12 @@ export default function SignIn() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            {loginError &&
+              <Typography variant="caption" display="block" sx={{ alignSelf: "start", color: "red" }}>
+                * Incorrect email or password
+              </Typography>
+            }
+            <Box component="form" noValidate onSubmit={handleSubmit}>
               <TextField
                 margin="normal"
                 required
@@ -104,10 +98,10 @@ export default function SignIn() {
                 id="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
-              />
+              /> */}
               <Button
                 type="submit"
                 fullWidth
@@ -117,18 +111,17 @@ export default function SignIn() {
                 Sign In
               </Button>
               <Grid container>
-                <Grid item xs>
+                {/* <Grid item xs>
                   <Link href="#" variant="body2">
                     Forgot password?
                   </Link>
-                </Grid>
+                </Grid> */}
                 <Grid item>
                   <Link href="register" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
             </Box>
           </Box>
         </Grid>
