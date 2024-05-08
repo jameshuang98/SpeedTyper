@@ -10,7 +10,7 @@ export const getUsers = async (): Promise<ApiResponse> => {
         })
         .catch(error => {
             console.log(error)
-            throw error;
+            return { statusCode: error.status, data: error.data };
         });
 };
 
@@ -22,7 +22,7 @@ export const getUser = async (id: number): Promise<ApiResponse> => {
         })
         .catch(error => {
             console.log(error)
-            throw error;
+            return { statusCode: error.status, data: error.data };
         });
 };
 
@@ -34,7 +34,7 @@ export const registerUser = async (userRegistrationRequest: UserRegistrationRequ
         })
         .catch(error => {
             console.log(error)
-            throw error;
+            return { statusCode: error.status, data: error.data };
         });
 };
 
@@ -45,10 +45,10 @@ export const loginUser = async (userLoginRequest: UserLoginRequest): Promise<Api
             return { statusCode: response.status, data: response.data };
         })
         .catch(error => {
-            console.log(error)
+            console.log('error', error)
             if (error.response && error.response.status === 401) {
                 console.log("Incorrect Credentials")
             }
-            throw error;
+            return { statusCode: error.status, data: error.data };
         });
 };
