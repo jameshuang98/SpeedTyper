@@ -33,7 +33,7 @@ export default function SignUp() {
     if (registerResponse && registerResponse.statusCode === 201) {
       showSnackbar("Registration Successful");
       navigate("/");
-    }
+    };
   };
 
   return (

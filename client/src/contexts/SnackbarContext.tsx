@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { Fade, Snackbar } from "@mui/material";
+import { Alert, Fade, Snackbar } from "@mui/material";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 interface SnackbarContextType {
     showSnackbar: (message: string) => void;
@@ -40,9 +41,17 @@ export function SnackbarProvider({ children }: Props) {
                 open={isVisible}
                 onClose={hideSnackbar}
                 TransitionComponent={Fade}
-                message={message}
                 autoHideDuration={2000}
-            />
+                ContentProps={{
+                    sx: {
+                        background: "#4CAF50"
+                    }
+                }}
+            >
+                <Alert icon={<CheckCircleOutlineIcon fontSize="small" />} variant="filled" severity="success">
+                    {message}
+                </Alert>
+            </Snackbar>
         </SnackbarContext.Provider>
     )
 }
