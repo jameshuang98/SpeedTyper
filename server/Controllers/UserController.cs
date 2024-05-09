@@ -29,7 +29,7 @@ public class UserController : ControllerBase
         return Ok(userDTOs);
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("{id:int}", Name = "GetUser")]
     public async Task<ActionResult<UserDTO>> GetUser(int id)
     {
         var user = await _userRepository.GetUserById(id);
@@ -64,26 +64,5 @@ public class UserController : ControllerBase
         }
         var userDTO = deletedUser.ConvertToDTO();
         return Ok(userDTO);
-    }
-
-    [HttpPost("register")]
-    public async Task<ActionResult<UserDTO>> RegisterUser([FromBody] UserRegistrationRequest userRegistrationRequest)
-    {
-        var newUser = await _userRepository.RegisterUser(userRegistrationRequest);
-        if (newUser == null)
-        {
-            return BadRequest("Failed to register user");
-        }
-        var userDTO = newUser.ConvertToDTO();
-        return CreatedAtAction(nameof(GetUser), new { id = userDTO.Id }, userDTO);
-    }
-
-    [HttpPost("login")]
-    public async Task<IActionResult> LoginUser(UserLoginRequest userLoginRequest)
-    {
-        var authentication = await _userRepository.LoginUser(userLoginRequest);
-        if (authentication == null || (bool)!authentication)
-            return Unauthorized();
-        return Ok(authentication);
     }
 }

@@ -12,7 +12,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { UserLoginRequest } from 'constants/types';
-import { loginUser } from 'api/users';
+import { loginUser } from 'api/auth';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'contexts/SnackbarContext';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';

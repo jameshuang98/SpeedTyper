@@ -12,7 +12,7 @@ import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
-import { registerUser } from 'api/users';
+import { registerUser } from 'api/auth';
 import { UserRegistrationRequest } from 'constants/types';
 import { useSnackbar } from 'contexts/SnackbarContext';
 
