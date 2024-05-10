@@ -2,7 +2,7 @@
 
 namespace server.Services;
 
-public class PasswordService : IPasswordService
+public class AuthService : IAuthService
 {
     public string HashPassword(string password)
     {

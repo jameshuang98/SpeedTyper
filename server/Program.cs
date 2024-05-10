@@ -36,7 +36,7 @@ namespace server
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IScoreRepository, ScoreRepository>();
-            builder.Services.AddScoped<IPasswordService, PasswordService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
 
             builder.Services.AddCors(options =>

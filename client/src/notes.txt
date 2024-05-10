@@ -1,0 +1,12 @@
+- When a user finishes a line of text, it moves to the next line
+ - always only show two lines of text
+ - user is shown a line of their input
+ - highlight word that we are currently typing, grey?
+ - misspelling causes the word to highlight red
+ - sound effect when typing?
+ 
+
+ - on current word, it highlights green if correct so far or red if there is an error
+ - on previous words, text color is green if correct or red if not.
+- able to backtrack
+- 

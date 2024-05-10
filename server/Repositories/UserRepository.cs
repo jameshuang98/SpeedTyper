@@ -7,8 +7,8 @@ namespace server.Repositories;
 public class UserRepository : IUserRepository
 {
     private readonly SpeedTyperDbContext _context;
-    private IPasswordService _passwordService;
-    public UserRepository(SpeedTyperDbContext speedTyperDbContext, IPasswordService passwordService)
+    private IAuthService _passwordService;
+    public UserRepository(SpeedTyperDbContext speedTyperDbContext, IAuthService passwordService)
     {
         _context = speedTyperDbContext;
         _passwordService = passwordService;
