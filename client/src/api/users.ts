@@ -1,9 +1,8 @@
-import axios from "axios";
-import API_BASE_URL from "constants/constants";
 import { ApiResponse } from "constants/types";
+import api from "./axios/axios";
 
 export const getUsers = async (): Promise<ApiResponse> => {
-    return axios.get(`${API_BASE_URL}user`)
+    return api.get(`/user`)
         .then(response => {
             console.log("response", response);
             return { statusCode: response.status, data: response.data };
@@ -15,7 +14,7 @@ export const getUsers = async (): Promise<ApiResponse> => {
 };
 
 export const getUser = async (id: number): Promise<ApiResponse> => {
-    return axios.get(`${API_BASE_URL}user/${id}`)
+    return api.get(`/user/${id}`)
         .then(response => {
             console.log("response", response);
             return { statusCode: response.status, data: response.data };

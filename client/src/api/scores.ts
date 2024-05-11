@@ -1,9 +1,8 @@
-import axios from "axios";
-import API_BASE_URL from "constants/constants";
 import { ApiResponse } from "constants/types";
+import api from "./axios/axios";
 
 export const getScores = async (): Promise<ApiResponse> => {
-    return axios.get(`${API_BASE_URL}score`)
+    return api.get(`/score`)
         .then(response => {
             console.log("response", response);
             return { statusCode: response.status, data: response.data };
@@ -15,7 +14,7 @@ export const getScores = async (): Promise<ApiResponse> => {
 };
 
 export const getUserScores = async (userId: number): Promise<ApiResponse> => {
-    return axios.get(`${API_BASE_URL}score/GetUserScores/${userId}`)
+    return api.get(`/score/GetUserScores/${userId}`)
         .then(response => {
             console.log("response", response);
             return { statusCode: response.status, data: response.data };
@@ -27,7 +26,7 @@ export const getUserScores = async (userId: number): Promise<ApiResponse> => {
 };
 
 export const getScore = async (id: number): Promise<ApiResponse> => {
-    return axios.get(`${API_BASE_URL}score/${id}`)
+    return api.get(`/score/${id}`)
         .then(response => {
             console.log("response", response);
             return { statusCode: response.status, data: response.data };

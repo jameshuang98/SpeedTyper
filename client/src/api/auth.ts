@@ -1,11 +1,13 @@
-import axios from "axios";
-import API_BASE_URL from "constants/constants";
+import api from "./axios/axios";
 import { ApiResponse, UserLoginRequest, UserRegistrationRequest } from "constants/types";
 
 export const registerUser = async (userRegistrationRequest: UserRegistrationRequest): Promise<ApiResponse> => {
-    return axios.post(`${API_BASE_URL}auth/register`, userRegistrationRequest)
+    return api.post(`auth/register`, userRegistrationRequest)
         .then(response => {
             console.log("response", response);
+            if (response.status === 201) {
+                localStorage.setItem('jwtToken', response.data);
+            }
             return { statusCode: response.status, data: response.data };
         })
         .catch(error => {
@@ -15,9 +17,12 @@ export const registerUser = async (userRegistrationRequest: UserRegistrationRequ
 };
 
 export const loginUser = async (userLoginRequest: UserLoginRequest): Promise<ApiResponse> => {
-    return axios.post(`${API_BASE_URL}auth/login`, userLoginRequest)
+    return api.post(`auth/login`, userLoginRequest)
         .then(response => {
             console.log("response", response);
+            if (response.status === 200) {
+                localStorage.setItem('jwtToken', response.data);
+            }
             return { statusCode: response.status, data: response.data };
         })
         .catch(error => {
