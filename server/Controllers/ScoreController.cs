@@ -2,9 +2,11 @@
 using server.Repositories;
 using server.Extensions;
 using server.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace server.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 [ApiController]
 public class ScoreController : ControllerBase

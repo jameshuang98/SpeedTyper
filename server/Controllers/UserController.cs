@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using server.Extensions;
 using server.Models;
 using server.Models.DTOs;
@@ -6,6 +7,7 @@ using server.Models.Entities;
 
 namespace server.Repositories;
 
+[Authorize]
 [Route("[controller]")]
 [ApiController]
 public class UserController : ControllerBase
