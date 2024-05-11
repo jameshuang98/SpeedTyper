@@ -3,6 +3,7 @@ using server.Models.DTOs;
 using server.Models;
 using server.Repositories;
 using server.Extensions;
+using server.Services.Interfaces;
 
 namespace server.Controllers;
 
@@ -11,9 +12,12 @@ namespace server.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
-    public AuthController(IUserRepository userRepository)
+    private readonly IAuthService _authService;
+
+    public AuthController(IUserRepository userRepository, IAuthService authService)
     {
         _userRepository = userRepository;
+        _authService = authService;
     }
 
     [HttpPost("register")]
@@ -24,22 +28,19 @@ public class AuthController : ControllerBase
         {
             return BadRequest("Failed to register user");
         }
-        var userDTO = newUser.ConvertToDTO();
-        return CreatedAtAction("GetUser", "UserController", new { id = userDTO.Id }, userDTO);
+        string token = _authService.GenerateToken(newUser);
+        return CreatedAtAction("GetUser", "UserController", new { id = newUser.Id }, token);
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> LoginUser(UserLoginRequest userLoginRequest)
     {
-        var authentication = await _userRepository.LoginUser(userLoginRequest);
-        if (authentication == null)
+        var loggedInUser = await _userRepository.LoginUser(userLoginRequest);
+        if (loggedInUser == null)
         {
             return BadRequest("Failed to login user");
         }
-        if ((bool)!authentication)
-        {
-            return Unauthorized("Invalid email or password");
-        }
-        return Ok(authentication);
+        string token = _authService.GenerateToken(loggedInUser);
+        return Ok(token);
     }
 }

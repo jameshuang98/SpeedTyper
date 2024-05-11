@@ -71,13 +71,13 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
         return user.Entity;
     }
-    public async Task<bool?> LoginUser(UserLoginRequest userRequest)
+    public async Task<User?> LoginUser(UserLoginRequest userRequest)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userRequest.Email);
-        if (user == null)
+        if (user == null || !_passwordService.VerifyPassword(userRequest.Password, user.Password))
         {
             return null;
         }
-        return _passwordService.VerifyPassword(userRequest.Password, user.Password);
+        return user;
     }
 }
