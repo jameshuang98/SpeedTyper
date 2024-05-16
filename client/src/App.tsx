@@ -8,6 +8,7 @@ import NotFound from "pages/NotFound/NotFound";
 import SignIn from "pages/SignIn/SignIn";
 import SignUp from "pages/SignUp/SignUp";
 import { SnackbarProvider } from './contexts/SnackbarContext';
+import { AuthProvider } from "contexts/AuthContext";
 
 import "./App.scss";
 
@@ -49,9 +50,11 @@ function App() {
 
   return (
     <React.StrictMode>
-      <SnackbarProvider>
-        <RouterProvider router={router} />
-      </SnackbarProvider>
+      <AuthProvider>
+        <SnackbarProvider>
+          <RouterProvider router={router} />
+        </SnackbarProvider>
+      </AuthProvider>
     </React.StrictMode>
   );
 }
