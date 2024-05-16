@@ -16,8 +16,10 @@ import { loginUser } from 'api/auth';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'contexts/SnackbarContext';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { useAuth } from 'contexts/AuthContext';
 
 export default function SignIn() {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
   const [loginError, setLoginError] = useState(false);
@@ -33,6 +35,7 @@ export default function SignIn() {
     const loginResponse = await loginUser(userLoginRequest);
     if (loginResponse && loginResponse.statusCode === 200) {
       showSnackbar("Login Successful", <CheckCircleOutlineIcon fontSize="small" />);
+      login(loginResponse.data);
       navigate("/");
     } else {
       setLoginError(true);
