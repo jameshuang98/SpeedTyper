@@ -32,10 +32,8 @@ export function AuthProvider({ children }: Props) {
 
     useEffect(() => {
         const token = localStorage.getItem('jwtToken');
-        console.log("token:", token)
         if (token) {
             const userData = decodeToken(token);
-            console.log("userData", userData)
             setUser(userData);
         }
     }, []);
@@ -44,7 +42,6 @@ export function AuthProvider({ children }: Props) {
         try {
             const decodedToken = jwtDecode<JwtPayload>(token);
             const { id, username, email, firstName, lastName, profileImageURL } = decodedToken as User;
-            console.log("decodedToken: ", decodedToken)
             const user: User = {
                 id,
                 username,
@@ -53,7 +50,6 @@ export function AuthProvider({ children }: Props) {
                 lastName,
                 profileImageURL
             };
-            console.log("UserUser: ", user)
 
             return user;
         } catch (error) {
