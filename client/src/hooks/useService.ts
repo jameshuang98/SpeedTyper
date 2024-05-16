@@ -1,8 +1,9 @@
+import { ApiResponse } from 'constants/types';
 import { useState, useEffect } from 'react';
 
 const useService = <T>(get: () => Promise<T>) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [data, setData] = useState<T | null>(null);
+  const [response, setResponse] = useState<T | null>(null);
   const [error, setError] = useState<Error | undefined>(undefined);
 
   useEffect(() => {
@@ -10,8 +11,8 @@ const useService = <T>(get: () => Promise<T>) => {
       setLoading(true);
 
       try {
-        const data = await get();
-        setData(data);
+        const response = await get();
+        setResponse(response);
       } catch (e) {
         setError(e as Error);
       } finally {
@@ -25,7 +26,7 @@ const useService = <T>(get: () => Promise<T>) => {
   return {
     loading,
     error,
-    data,
+    response,
   };
 }
 

@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Button, ButtonGroup, CircularProgress } from '@mui/material';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 
 import ResultCard from 'components/ResultCard/ResultCard';
 import useService from 'hooks/useService';
-import { getScores } from 'api/scores';
+import { getUserScores } from 'api/scores';
 import { SortOption, ScoreItem } from 'constants/types.js';
+import { useLocation } from 'react-router-dom';
 
 import classes from './ScoreHistory.module.scss';
 
@@ -36,7 +37,11 @@ const responsive = {
 };
 
 export default function ScoreHistory() {
-    const { loading, error, data } = useService(getScores);
+    const location = useLocation();
+    const { id } = location.state;
+    const fetchScores = useCallback(() => getUserScores(id), [id]);
+    const { loading, error, response } = useService(fetchScores);
+    const data = response?.data;
     const [sortOption, setSortOption] = useState<SortOption>("recent");
     const sortResults = (option: SortOption) => {
         switch (option) {
@@ -59,7 +64,6 @@ export default function ScoreHistory() {
                 return ((a: ScoreItem, b: ScoreItem) => b.correctWords - a.correctWords);
         }
     }
-
     // filter by recent, top score
     const resultCards = Array.isArray(data) ?
         data.sort(sortResults(sortOption))
