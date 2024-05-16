@@ -4,6 +4,7 @@ using server.Extensions;
 using server.Models;
 using server.Models.DTOs;
 using server.Models.Entities;
+using server.Services.Interfaces;
 
 namespace server.Repositories;
 
@@ -13,9 +14,12 @@ namespace server.Repositories;
 public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
-    public UserController(IUserRepository userRepository)
+    private readonly IAuthService _authService;
+
+    public UserController(IUserRepository userRepository, IAuthService authService)
     {
         _userRepository = userRepository;
+        _authService = authService;
     }
 
     [HttpGet]
@@ -47,6 +51,11 @@ public class UserController : ControllerBase
     [HttpPatch()]
     public async Task<ActionResult<UserDTO>> UpdateUser([FromBody] User user)
     {
+        if (!_authService.IsUserAuthorized(user.Id))
+        {
+            return Forbid();
+        }
+
         var updatedUser = await _userRepository.UpdateUser(user);
         if (updatedUser == null)
         {
@@ -59,6 +68,11 @@ public class UserController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<UserDTO>> DeleteUser(int id)
     {
+        if (!_authService.IsUserAuthorized(id))
+        {
+            return Forbid();
+        }
+
         var deletedUser = await _userRepository.DeleteUser(id);
         if (deletedUser == null)
         {

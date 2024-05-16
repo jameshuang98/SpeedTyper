@@ -4,9 +4,11 @@ using server.Models;
 using server.Repositories;
 using server.Extensions;
 using server.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace server.Controllers;
 
+[AllowAnonymous]
 [Route("[controller]")]
 [ApiController]
 public class AuthController : ControllerBase
@@ -29,7 +31,8 @@ public class AuthController : ControllerBase
             return BadRequest("Failed to register user");
         }
         string token = _authService.GenerateToken(newUser);
-        return CreatedAtAction("GetUser", "UserController", new { id = newUser.Id }, token);
+        
+        return CreatedAtAction("GetUser", "User", new { id = newUser.Id }, token);
     }
 
     [HttpPost("login")]
