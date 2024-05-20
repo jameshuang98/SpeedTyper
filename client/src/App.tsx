@@ -11,6 +11,7 @@ import { SnackbarProvider } from './contexts/SnackbarContext';
 import { AuthProvider } from "contexts/AuthContext";
 
 import "./App.scss";
+import Profile from "pages/Profile/Profile";
 
 
 function App() {
@@ -43,6 +44,10 @@ function App() {
         {
           path: '*',
           element: <NotFound />
+        },
+        {
+          path: '/profile',
+          element: <Profile />
         },
       ],
     },
