@@ -12,7 +12,7 @@ export const registerUser = async (userRegistrationRequest: UserRegistrationRequ
         })
         .catch(error => {
             console.log(error)
-            return { statusCode: error.status, data: error.data };
+            throw error;
         });
 };
 
@@ -30,6 +30,6 @@ export const loginUser = async (userLoginRequest: UserLoginRequest): Promise<Api
             if (error.response && error.response.status === 401) {
                 console.log("Incorrect Credentials")
             }
-            return { statusCode: error.status, data: error.data };
+            throw error;
         });
 };

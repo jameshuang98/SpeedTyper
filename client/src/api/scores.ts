@@ -9,7 +9,7 @@ export const getScores = async (): Promise<ApiResponse> => {
         })
         .catch(error => {
             console.log(error)
-            return { statusCode: error.status, data: error.data };
+            throw error;
         });
 };
 
@@ -21,7 +21,7 @@ export const getUserScores = async (userId: number): Promise<ApiResponse> => {
         })
         .catch(error => {
             console.log(error)
-            return { statusCode: error.status, data: error.data };
+            throw error;
         });
 };
 
@@ -33,6 +33,6 @@ export const getScore = async (id: number): Promise<ApiResponse> => {
         })
         .catch(error => {
             console.log(error)
-            return { statusCode: error.status, data: error.data };
+            throw error;
         });
 };

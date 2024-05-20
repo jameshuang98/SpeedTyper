@@ -11,11 +11,12 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+
 import { UserLoginRequest } from 'constants/types';
 import { loginUser } from 'api/auth';
-import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'contexts/SnackbarContext';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useAuth } from 'contexts/AuthContext';
 
 export default function SignIn() {
@@ -32,12 +33,14 @@ export default function SignIn() {
       password: data.get('password') as string
     };
 
-    const loginResponse = await loginUser(userLoginRequest);
-    if (loginResponse && loginResponse.statusCode === 200) {
-      showSnackbar("Login Successful", <CheckCircleOutlineIcon fontSize="small" />);
-      login(loginResponse.data);
-      navigate("/");
-    } else {
+    try {
+      const loginResponse = await loginUser(userLoginRequest);
+      if (loginResponse && loginResponse.statusCode === 200) {
+        showSnackbar("Login Successful", <CheckCircleOutlineIcon fontSize="small" />);
+        login(loginResponse.data);
+        navigate("/");
+      }
+    } catch (err) {
       setLoginError(true);
     }
   };

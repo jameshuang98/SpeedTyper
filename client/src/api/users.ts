@@ -1,4 +1,4 @@
-import { ApiResponse } from "constants/types";
+import { ApiResponse, User } from "constants/types";
 import api from "./axios/axios";
 
 export const getUsers = async (): Promise<ApiResponse> => {
@@ -9,7 +9,7 @@ export const getUsers = async (): Promise<ApiResponse> => {
         })
         .catch(error => {
             console.log(error)
-            return { statusCode: error.status, data: error.data };
+            throw error;
         });
 };
 
@@ -21,6 +21,18 @@ export const getUser = async (id: number): Promise<ApiResponse> => {
         })
         .catch(error => {
             console.log(error)
-            return { statusCode: error.status, data: error.data };
+            throw error;
+        });
+};
+
+export const patchUser = async (user: User): Promise<ApiResponse> => {
+    return api.patch(`/user`, user)
+        .then(response => {
+            console.log("response", response);
+            return { statusCode: response.status, data: response.data };
+        })
+        .catch(error => {
+            console.log(error)
+            throw error;
         });
 };

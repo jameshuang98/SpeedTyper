@@ -24,17 +24,22 @@ export default function SignUp() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const userRegistrationRequest: UserRegistrationRequest = {
-      email: data.get('email') as string,
       firstName: data.get('firstName') as string,
       lastName: data.get('lastName') as string,
+      email: data.get('email') as string,
+      username: data.get('username') as string,
       password: data.get('password') as string
     };
 
-    const registerResponse = await registerUser(userRegistrationRequest);
-    if (registerResponse && registerResponse.statusCode === 201) {
-      showSnackbar("Registration Successful", <CheckCircleOutlineIcon fontSize="small" />);
-      navigate("/");
-    };
+    try {
+      const registerResponse = await registerUser(userRegistrationRequest);
+      if (registerResponse && registerResponse.statusCode === 201) {
+        showSnackbar("Registration Successful", <CheckCircleOutlineIcon fontSize="small" />);
+        navigate("/");
+      };
+    } catch (err) {
+      console.log(err)
+    }
   };
 
   return (
@@ -67,10 +72,10 @@ export default function SignUp() {
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="given-name"
-                name="firstName"
                 required
                 fullWidth
                 id="firstName"
+                name="firstName"
                 label="First Name"
                 autoFocus
               />
@@ -80,9 +85,19 @@ export default function SignUp() {
                 required
                 fullWidth
                 id="lastName"
-                label="Last Name"
                 name="lastName"
+                label="Last Name"
                 autoComplete="family-name"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="username"
+                name="username"
+                label="Username"
+                autoComplete="username"
               />
             </Grid>
             <Grid item xs={12}>
