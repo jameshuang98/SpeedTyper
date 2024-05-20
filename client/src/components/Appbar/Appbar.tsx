@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppBar, Avatar, Button, Divider, IconButton, ListItemIcon, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'contexts/AuthContext';
@@ -8,7 +8,15 @@ import { Logout, History, PersonOutline } from '@mui/icons-material';
 
 function Appbar() {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
     const { user, logout } = useAuth();
+    useEffect(() => {
+        if (user !== undefined) {
+            setLoading(false);
+        }
+    }, [user]);
+
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -18,13 +26,9 @@ function Appbar() {
         setAnchorEl(null);
     };
 
-    const navigateToScores = (userId: number): void => {
-        navigate('/scores', { state: { id: userId } });
-    };
-
     const handleLogout = () => {
         logout();
-        navigate('/signin');
+        navigate('/login');
     }
 
     return (
@@ -33,7 +37,7 @@ function Appbar() {
                 <Typography variant="body1" component="div" className={classes.appName} onClick={() => navigate("/")}>
                     SpeedTyper
                 </Typography>
-                {!user &&
+                {!user && !loading &&
                     <Button href="/login" className={classes.loginButton}>Login</Button>
                 }
                 {user &&
@@ -54,6 +58,7 @@ function Appbar() {
                             open={open}
                             onClose={handleClose}
                             onClick={handleClose}
+                            disableScrollLock={true}
                             slotProps={{
                                 paper: {
                                     elevation: 0,
@@ -73,13 +78,13 @@ function Appbar() {
                             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                         >
-                            <MenuItem onClick={handleClose}>
+                            <MenuItem onClick={() => navigate('/profile')}>
                                 <ListItemIcon>
                                     <PersonOutline sx={{ width: 24, height: 24 }} />
                                 </ListItemIcon>
                                 <Typography variant="caption">View Profile</Typography>
                             </MenuItem>
-                            <MenuItem onClick={() => navigateToScores(user.id)}>
+                            <MenuItem onClick={() => navigate('/scores')}>
                                 <ListItemIcon>
                                     <History sx={{ width: 24, height: 24 }} />
                                 </ListItemIcon>

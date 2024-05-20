@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef, createRef } from 'react';
+import { Typography } from '@mui/material';
+
 import { GameState, InputWord } from 'constants/types';
-
-import GameStateButton from 'components/Button/GameStateButton';
-
-import classes from './Main.module.scss';
 import samples from '../../constants/samples'
-import isValidKey from '../../helpers';
+import { isValidKey } from '../../helpers';
+import GameStateButton from 'components/Button/GameStateButton';
 import Postgame from 'components/Postgame/Postgame';
 import TextDisplay from 'components/TextDisplay/TextDisplay';
 import Countdown from 'components/Countdown/Countdown';
-import { Typography } from '@mui/material';
+
+import classes from './Main.module.scss';
 
 // Constants
 const timeLimit = 60;
