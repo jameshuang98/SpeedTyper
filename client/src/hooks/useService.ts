@@ -1,4 +1,3 @@
-import { ApiResponse } from 'constants/types';
 import { useState, useEffect } from 'react';
 
 const useService = <T>(get: () => Promise<T>) => {
@@ -12,9 +11,11 @@ const useService = <T>(get: () => Promise<T>) => {
 
       try {
         const response = await get();
+        console.log(response)
         setResponse(response);
-      } catch (e) {
-        setError(e as Error);
+      } catch (err) {
+        console.log(err)
+        setError(err as Error);
       } finally {
         setLoading(false);
       }

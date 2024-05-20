@@ -61,8 +61,8 @@ public class UserController : ControllerBase
         {
             return NotFound();
         }
-        var userDTO = updatedUser.ConvertToDTO();
-        return Ok(userDTO);
+        string token = _authService.GenerateToken(updatedUser);
+        return Ok(token);
     }
 
     [HttpDelete("{id:int}")]
