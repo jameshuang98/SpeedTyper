@@ -64,6 +64,7 @@ public class UserRepository : IUserRepository
         {
             FirstName = userRegistrationRequest.FirstName,
             LastName = userRegistrationRequest.LastName,
+            Username = userRegistrationRequest.Username,
             Email = userRegistrationRequest.Email,
             Password = _passwordService.HashPassword(userRegistrationRequest.Password)
         };
