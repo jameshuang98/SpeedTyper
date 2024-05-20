@@ -7,7 +7,8 @@ import ResultCard from 'components/ResultCard/ResultCard';
 import useService from 'hooks/useService';
 import { getUserScores } from 'api/scores';
 import { SortOption, ScoreItem } from 'constants/types.js';
-import { useLocation } from 'react-router-dom';
+import { useAuth } from 'contexts/AuthContext';
+import { sortResults } from 'helpers';
 
 import classes from './ScoreHistory.module.scss';
 
@@ -37,33 +38,12 @@ const responsive = {
 };
 
 export default function ScoreHistory() {
-    const location = useLocation();
-    const { id } = location.state;
+    const { user } = useAuth();
+    const id = user ? user.id : 0;
     const fetchScores = useCallback(() => getUserScores(id), [id]);
     const { loading, error, response } = useService(fetchScores);
     const data = response?.data;
     const [sortOption, setSortOption] = useState<SortOption>("recent");
-    const sortResults = (option: SortOption) => {
-        switch (option) {
-            case "recent":
-                return ((a: ScoreItem, b: ScoreItem) => {
-                    // Compare dates first
-                    const dateA = new Date(a.createdDate);
-                    const dateB = new Date(b.createdDate);
-                    const dateComparison = dateB.toDateString().localeCompare(dateA.toDateString());
-                    if (dateComparison !== 0) {
-                        // If dates are different, return the result of the date comparison
-                        return dateComparison;
-                    } else {
-                        // If dates are the same, compare times
-                        return dateB.getTime() - dateA.getTime();
-                    }
-                });
-            case "highest":
-            default:
-                return ((a: ScoreItem, b: ScoreItem) => b.correctWords - a.correctWords);
-        }
-    }
     // filter by recent, top score
     const resultCards = Array.isArray(data) ?
         data.sort(sortResults(sortOption))
@@ -80,36 +60,40 @@ export default function ScoreHistory() {
             )) : [];
 
     const renderContent = () => {
-        if (loading) return <CircularProgress />;
-        if (error) return <div>Error getting data!</div>;
-        if (resultCards.length > 0) {
+        if (loading) {
+            return <CircularProgress />;
+        } else if (error) {
+            return <div className={classes.error}>{id ? "Error getting data!" : "Must be logged in to get scores!"}</div>;
+        } else if (resultCards.length > 0) {
             return (
-                <Carousel
-                    responsive={responsive}
-                    swipeable={false}
-                    keyBoardControl={true}
-                    containerClass={classes.carouselContainer}
-                    itemClass={classes.carouselItem}
-                    sliderClass={classes.slider}
-                    dotListClass={classes.dotList}
-                    removeArrowOnDeviceType={["tablet", "mobile"]}
-                    showDots={true}
-                >
-                    {resultCards}
-                </Carousel>
+                <div className={classes.container}>
+                    <h3 className={classes.title}>Your Scores</h3>
+                    <ButtonGroup size="small" aria-label="Button group for score sorting" className={classes.buttonGroup}>
+                        <Button variant={sortOption === "recent" ? "contained" : "outlined"} onClick={() => setSortOption("recent")}>Most Recent</Button>
+                        <Button variant={sortOption === "highest" ? "contained" : "outlined"} onClick={() => setSortOption("highest")}>Highest</Button>
+                    </ButtonGroup>
+                    <Carousel
+                        responsive={responsive}
+                        swipeable={false}
+                        keyBoardControl={true}
+                        containerClass={classes.carouselContainer}
+                        itemClass={classes.carouselItem}
+                        sliderClass={classes.slider}
+                        dotListClass={classes.dotList}
+                        removeArrowOnDeviceType={["tablet", "mobile"]}
+                        showDots={true}
+                    >
+                        {resultCards}
+                    </Carousel>
+                </div>
             );
         }
         return null;
     };
 
     return (
-        <div className={classes.container}>
-            <h3 className={classes.title}>Your Scores</h3>
-            <ButtonGroup size="small" aria-label="Button group for score sorting" className={classes.buttonGroup}>
-                <Button variant={sortOption === "recent" ? "contained" : "outlined"} onClick={() => setSortOption("recent")}>Most Recent</Button>
-                <Button variant={sortOption === "highest" ? "contained" : "outlined"} onClick={() => setSortOption("highest")}>Highest</Button>
-            </ButtonGroup>
+        <>
             {renderContent()}
-        </div>
+        </>
     )
 }
