@@ -38,9 +38,14 @@ const responsive = {
 };
 
 export default function ScoreHistory() {
-    const { user } = useAuth();
+    const { user, userLoading } = useAuth();
     const id = user ? user.id : 0;
-    const fetchScores = useCallback(() => getUserScores(id), [id]);
+    const fetchScores = useCallback(() => {
+        if (!userLoading) {
+            return getUserScores(id);
+        }
+        return Promise.resolve(null);
+    }, [id, userLoading]);
     const { loading, error, response } = useService(fetchScores);
     const data = response?.data;
     const [sortOption, setSortOption] = useState<SortOption>("recent");
@@ -60,7 +65,7 @@ export default function ScoreHistory() {
             )) : [];
 
     const renderContent = () => {
-        if (loading) {
+        if (loading || userLoading) {
             return <CircularProgress />;
         } else if (error) {
             return <div className={classes.error}>{id ? "Error getting data!" : "Must be logged in to get scores!"}</div>;

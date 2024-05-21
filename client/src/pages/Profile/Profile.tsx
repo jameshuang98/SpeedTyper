@@ -6,12 +6,18 @@ import ProfileForm from 'components/ProfileForm/ProfileForm';
 import { useAuth } from 'contexts/AuthContext';
 
 import classes from './Profile.module.scss';
+import Loading from 'components/Loading/Loading';
 
 type Props = {}
 
 export default function Profile(props: Props) {
-    const { user } = useAuth();
-    if (!user) {
+    const { user, userLoading } = useAuth();
+
+    if (userLoading) {
+        return <Loading />
+    }
+    
+    if (!user && !userLoading) {
         return <div>You must be logged in!</div>
     }
 
@@ -26,4 +32,4 @@ export default function Profile(props: Props) {
             </div>
         </div>
     )
-}
+};

@@ -6,13 +6,15 @@ interface AuthContextType {
     user: User | null;
     login: (token: string) => void;
     logout: () => void;
+    userLoading: boolean;
 };
 
 
 const AuthContext = createContext<AuthContextType>({
     user: null,
     login: () => null,
-    logout: () => null
+    logout: () => null,
+    userLoading: false
 });
 
 export const useAuth = () => {
@@ -29,6 +31,7 @@ interface Props {
 
 export function AuthProvider({ children }: Props) {
     const [user, setUser] = useState<User | null>(null);
+    const [userLoading, setUserLoading] = useState(true);
 
     useEffect(() => {
         const token = localStorage.getItem('jwtToken');
@@ -36,6 +39,7 @@ export function AuthProvider({ children }: Props) {
             const userData = decodeToken(token);
             setUser(userData);
         }
+        setUserLoading(false);
     }, []);
 
     const decodeToken = (token: string): User | null => {
@@ -70,7 +74,7 @@ export function AuthProvider({ children }: Props) {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout, userLoading }}>
             {children}
         </AuthContext.Provider>
     );

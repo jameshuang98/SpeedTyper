@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { AppBar, Avatar, Button, Divider, IconButton, ListItemIcon, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import React from 'react';
+import { Logout, History, PersonOutline } from '@mui/icons-material';
+import { AppBar, Avatar, Button, IconButton, ListItemIcon, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+
 import { useAuth } from 'contexts/AuthContext';
 
 import classes from './Appbar.module.scss';
-import { Logout, History, PersonOutline } from '@mui/icons-material';
 
 function Appbar() {
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(true);
-    const { user, logout } = useAuth();
-    useEffect(() => {
-        if (user !== undefined) {
-            setLoading(false);
-        }
-    }, [user]);
-
+    const { user, logout, userLoading } = useAuth();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -37,7 +31,7 @@ function Appbar() {
                 <Typography variant="body1" component="div" className={classes.appName} onClick={() => navigate("/")}>
                     SpeedTyper
                 </Typography>
-                {!user && !loading &&
+                {!user && !userLoading &&
                     <Button href="/login" className={classes.loginButton}>Login</Button>
                 }
                 {user &&
