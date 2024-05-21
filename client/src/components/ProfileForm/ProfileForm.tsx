@@ -6,19 +6,25 @@ import { User } from 'constants/types';
 import { patchUser } from 'api/users';
 import { useAuth } from 'contexts/AuthContext';
 import { useSnackbar } from 'contexts/SnackbarContext';
+import useValidateUserForm from 'hooks/useValidateUserForm';
 
 import classes from "./ProfileForm.module.scss";
 
 function ProfileForm() {
     const { user, login } = useAuth();
     const { showSnackbar } = useSnackbar();
+    const { values, errors, validForm, validate } = useValidateUserForm({
+        firstName: user!.firstName,
+        lastName: user!.lastName,
+        username: user!.username,
+        email: user!.email,
+        password: "default123!"
+    });
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const data = Object.fromEntries(formData.entries());
-        console.log(data);
-        console.log("data form:", data)
         const userData: User = {
             id: user!.id,
             firstName: data.firstName as string,
@@ -57,6 +63,9 @@ function ProfileForm() {
                             name="firstName"
                             // label="First Name"
                             defaultValue={user?.firstName}
+                            onBlur={(e) => validate("firstName", e.target.value)}
+                            error={errors.firstName !== ""}
+                            helperText={errors.firstName}
                         />
                     </Grid>
                     <Grid item lg={6} md={6} sm={12} sx={{ display: "flex", flexDirection: "column" }}>
@@ -70,6 +79,9 @@ function ProfileForm() {
                             name="lastName"
                             // label="Last Name"
                             defaultValue={user?.lastName}
+                            onBlur={(e) => validate("lastName", e.target.value)}
+                            error={errors.lastName !== ""}
+                            helperText={errors.lastName}
                         />
                     </Grid>
                     <Grid item lg={6} md={6} sm={12} sx={{ display: "flex", flexDirection: "column" }}>
@@ -83,6 +95,9 @@ function ProfileForm() {
                             name="username"
                             // label="Username"
                             defaultValue={user?.username}
+                            onBlur={(e) => validate("username", e.target.value)}
+                            error={errors.username !== ""}
+                            helperText={errors.username}
                         />
                     </Grid>
                     <Grid item lg={6} md={6} sm={12} sx={{ display: "flex", flexDirection: "column" }}>
@@ -96,6 +111,9 @@ function ProfileForm() {
                             name="email"
                             // label="Email"
                             defaultValue={user?.email}
+                            onBlur={(e) => validate("email", e.target.value)}
+                            error={errors.email !== ""}
+                            helperText={errors.email}
                         />
                     </Grid>
                     <Grid item lg={6} md={6} sm={12} >
@@ -112,7 +130,7 @@ function ProfileForm() {
                         </Link>
                     </Grid>
                     <Grid item lg={6} md={6} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                        <Button variant="contained" size="medium" type="submit" sx={{ margin: "1rem 1rem" }}>
+                        <Button disabled={!validForm} variant="contained" size="medium" type="submit" sx={{ margin: "1rem 1rem" }}>
                             <Typography variant="subtitle2">Save</Typography>
                         </Button>
                     </Grid>
