@@ -7,6 +7,50 @@ export function isValidKey(key: string): boolean {
     return /^[a-zA-Z0-9,./<>?;':"[\]{}\\|`~!@#$%^&*()_+\-=\s\b]$/.test(key) || key === 'Backspace';
 }
 
+export function isValidEmail(email: string): boolean {
+    return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email);
+}
+
+export function isValidPassword(password: string): boolean {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])(?!.*\s).{8,}$/.test(password);
+}
+
+export function isNotWhiteSpace(value: string): boolean {
+    return value.trim() !== "";
+}
+
+export function hasNonEmptyStringValue(obj: { [key: string]: string }): boolean {
+    for (const value of Object.values(obj)) {
+        if (typeof value === 'string' && value.trim() !== '') {
+            return true;
+        }
+    }
+    return false;
+}
+
+export function hasEmptyStringValue(obj: { [key: string]: string }): boolean {
+    for (const value of Object.values(obj)) {
+        if (typeof value === 'string' && value.trim() === '') {
+            return true;
+        }
+    }
+    return false;
+}
+
+export function areObjectsEqual(obj1: any, obj2: any) {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+    if (keys1.length !== keys2.length) {
+        return false;
+    }
+    for (let key of keys1) {
+        if (obj1[key] !== obj2[key]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 export function sortResults(option: SortOption) {
     switch (option) {
         case "recent":
