@@ -32,12 +32,12 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        if (_userService.IsEmailTaken(userRegistrationRequest.Email))
+        if (await _userService.IsEmailTakenAsync(userRegistrationRequest.Email))
         {
             return BadRequest("Email is already taken.");
         }
 
-        if (_userService.IsUsernameTaken(userRegistrationRequest.Username))
+        if (await _userService.IsUsernameTakenAsync(userRegistrationRequest.Username))
         {
             return BadRequest("Username is already taken.");
         }

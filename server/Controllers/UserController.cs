@@ -60,12 +60,12 @@ public class UserController : ControllerBase
             return Forbid();
         }
 
-        if (_userService.IsEmailTaken(user.Email))
+        if (await _userService.IsEmailTakenAsync(user.Email))
         {
             return BadRequest("Email is already taken.");
         }
 
-        if (_userService.IsUsernameTaken(user.Username))
+        if (await _userService.IsUsernameTakenAsync(user.Username))
         {
             return BadRequest("Username is already taken.");
         }

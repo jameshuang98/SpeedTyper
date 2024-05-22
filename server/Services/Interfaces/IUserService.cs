@@ -2,6 +2,6 @@
 
 public interface IUserService
 {
-    bool IsEmailTaken(string email);
-    bool IsUsernameTaken(string username);
+    Task<bool> IsEmailTakenAsync(string email);
+    Task<bool> IsUsernameTakenAsync(string username);
 }
