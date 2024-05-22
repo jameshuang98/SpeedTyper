@@ -29,7 +29,7 @@ export default function SignIn() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const userLoginRequest: UserLoginRequest = {
-      email: data.get('email') as string,
+      identifier: data.get('identifier') as string,
       password: data.get('password') as string
     };
 
@@ -89,9 +89,9 @@ export default function SignIn() {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
+                id="identifier"
+                label="Username or Email Address"
+                name="identifier"
                 autoComplete="email"
                 autoFocus
               />

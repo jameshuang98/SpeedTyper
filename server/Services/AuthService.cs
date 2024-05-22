@@ -1,5 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using server.Models;
 using server.Models.Entities;
+using server.Repositories;
 using server.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -11,11 +13,13 @@ public class AuthService : IAuthService
 {
     private readonly IConfiguration _configuration;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IUserRepository _userRepository;
 
-    public AuthService(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+    public AuthService(IHttpContextAccessor httpContextAccessor, IConfiguration configuration, IUserRepository userRepository)
     {
         _httpContextAccessor = httpContextAccessor;
         _configuration = configuration;
+        _userRepository = userRepository;
     }
     public string HashPassword(string password)
     {
@@ -84,5 +88,46 @@ public class AuthService : IAuthService
     {
         var currentUserId = GetUserIdFromClaims();
         return currentUserId.HasValue && currentUserId.Value == userId;
+    }
+
+    public async Task<User> RegisterUser(UserRegistrationRequest userRegistrationRequest)
+    {
+        var newUser = new User
+        {
+            FirstName = userRegistrationRequest.FirstName,
+            LastName = userRegistrationRequest.LastName,
+            Username = userRegistrationRequest.Username,
+            Email = userRegistrationRequest.Email,
+            Password = HashPassword(userRegistrationRequest.Password)
+        };
+
+        return await _userRepository.CreateUser(newUser);
+    }
+
+    public async Task<User?> LoginUser(string identifier, string password)
+    {
+        User? user;
+
+        // Check if the identifier is a valid email
+        if (IsValidEmail(identifier))
+        {
+            user = await _userRepository.GetUserByPredicate(u => u.Email == identifier);
+        }
+        else
+        {
+            user = await _userRepository.GetUserByPredicate(u => u.Username == identifier);
+        }
+
+        if (user == null || !VerifyPassword(password, user.Password))
+        {
+            return null;
+        }
+
+        return user;
+    }
+
+    private bool IsValidEmail(string email)
+    {
+        return new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(email);
     }
 }

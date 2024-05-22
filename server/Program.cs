@@ -71,6 +71,7 @@ namespace server
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IScoreRepository, ScoreRepository>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 

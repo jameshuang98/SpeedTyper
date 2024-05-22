@@ -1,4 +1,5 @@
-﻿using server.Models.Entities;
+﻿using server.Models;
+using server.Models.Entities;
 
 namespace server.Services.Interfaces;
 
@@ -10,4 +11,6 @@ public interface IAuthService
     bool IsAuthenticated();
     int? GetUserIdFromClaims();
     bool IsUserAuthorized(int userId);
+    Task<User> RegisterUser(UserRegistrationRequest userRegistrationRequest);
+    Task<User?> LoginUser(string username, string password);
 }

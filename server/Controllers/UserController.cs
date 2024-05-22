@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using server.Extensions;
 using server.Models;
 using server.Models.DTOs;
 using server.Models.Entities;
+using server.Services;
 using server.Services.Interfaces;
 
 namespace server.Repositories;
@@ -15,11 +17,13 @@ public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
     private readonly IAuthService _authService;
+    private readonly IUserService _userService;
 
-    public UserController(IUserRepository userRepository, IAuthService authService)
+    public UserController(IUserRepository userRepository, IAuthService authService, IUserService userService)
     {
         _userRepository = userRepository;
         _authService = authService;
+        _userService = userService;
     }
 
     [HttpGet]
@@ -48,12 +52,22 @@ public class UserController : ControllerBase
         return Ok(userDTO);
     }
 
-    [HttpPatch()]
-    public async Task<ActionResult<UserDTO>> UpdateUser([FromBody] User user)
+    [HttpPut()]
+    public async Task<ActionResult<User>> UpdateUser([FromBody] User user)
     {
         if (!_authService.IsUserAuthorized(user.Id))
         {
             return Forbid();
+        }
+
+        if (_userService.IsEmailTaken(user.Email))
+        {
+            return BadRequest("Email is already taken.");
+        }
+
+        if (_userService.IsUsernameTaken(user.Username))
+        {
+            return BadRequest("Username is already taken.");
         }
 
         var updatedUser = await _userRepository.UpdateUser(user);
