@@ -2,16 +2,15 @@
 using server.Models;
 using server.Models.Entities;
 using server.Services.Interfaces;
+using System.Linq.Expressions;
 namespace server.Repositories;
 
 public class UserRepository : IUserRepository
 {
     private readonly SpeedTyperDbContext _context;
-    private IAuthService _passwordService;
-    public UserRepository(SpeedTyperDbContext speedTyperDbContext, IAuthService passwordService)
+    public UserRepository(SpeedTyperDbContext speedTyperDbContext)
     {
         _context = speedTyperDbContext;
-        _passwordService = passwordService;
     }
 
     public async Task<IEnumerable<User>> GetUsers()
@@ -29,16 +28,21 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<User?> DeleteUser(int id)
+    public async Task<User?> GetUserByPredicate(Expression<Func<User, bool>> predicate)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await _context.Users.FirstOrDefaultAsync(predicate);
         if (user == null)
         {
             return null;
         }
-        _context.Users.Remove(user);
-        await _context.SaveChangesAsync();
         return user;
+    }
+
+    public async Task<User> CreateUser(User user)
+    {
+        var createdUser = await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+        return createdUser.Entity;
     }
 
     public async Task<User?> UpdateUser(User updatedUser)
@@ -58,27 +62,16 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
         return user;
     }
-    public async Task<User> RegisterUser(UserRegistrationRequest userRegistrationRequest)
+
+    public async Task<User?> DeleteUser(int id)
     {
-        var newUser = new User
-        {
-            FirstName = userRegistrationRequest.FirstName,
-            LastName = userRegistrationRequest.LastName,
-            Username = userRegistrationRequest.Username,
-            Email = userRegistrationRequest.Email,
-            Password = _passwordService.HashPassword(userRegistrationRequest.Password)
-        };
-        var user = await _context.Users.AddAsync(newUser);
-        await _context.SaveChangesAsync();
-        return user.Entity;
-    }
-    public async Task<User?> LoginUser(UserLoginRequest userRequest)
-    {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userRequest.Email);
-        if (user == null || !_passwordService.VerifyPassword(userRequest.Password, user.Password))
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
         {
             return null;
         }
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
         return user;
     }
 }
