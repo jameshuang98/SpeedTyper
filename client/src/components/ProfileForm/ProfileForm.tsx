@@ -2,7 +2,7 @@ import React from 'react';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Paper, Divider, Grid, Typography, TextField, Link, Button, Box } from '@mui/material';
 
-import { User } from 'constants/types';
+import { User, UserRegistrationRequest } from 'constants/types';
 import { patchUser } from 'api/users';
 import { useAuth } from 'contexts/AuthContext';
 import { useSnackbar } from 'contexts/SnackbarContext';
@@ -18,8 +18,12 @@ function ProfileForm() {
         lastName: user!.lastName,
         username: user!.username,
         email: user!.email,
-        password: "default123!"
+        password: "password123!" // placeholder password
     });
+
+    const handleProfileChange = (fieldName: keyof UserRegistrationRequest, value: string) => {
+        validate(fieldName, value, { validatePassword: false });
+    };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -63,7 +67,7 @@ function ProfileForm() {
                             name="firstName"
                             // label="First Name"
                             defaultValue={user?.firstName}
-                            onBlur={(e) => validate("firstName", e.target.value)}
+                            onBlur={(e) => handleProfileChange("firstName", e.target.value)}
                             error={errors.firstName !== ""}
                             helperText={errors.firstName}
                         />
@@ -79,7 +83,7 @@ function ProfileForm() {
                             name="lastName"
                             // label="Last Name"
                             defaultValue={user?.lastName}
-                            onBlur={(e) => validate("lastName", e.target.value)}
+                            onBlur={(e) => handleProfileChange("lastName", e.target.value)}
                             error={errors.lastName !== ""}
                             helperText={errors.lastName}
                         />
@@ -95,7 +99,7 @@ function ProfileForm() {
                             name="username"
                             // label="Username"
                             defaultValue={user?.username}
-                            onBlur={(e) => validate("username", e.target.value)}
+                            onBlur={(e) => handleProfileChange("username", e.target.value)}
                             error={errors.username !== ""}
                             helperText={errors.username}
                         />
@@ -111,13 +115,13 @@ function ProfileForm() {
                             name="email"
                             // label="Email"
                             defaultValue={user?.email}
-                            onBlur={(e) => validate("email", e.target.value)}
+                            onBlur={(e) => handleProfileChange("email", e.target.value)}
                             error={errors.email !== ""}
                             helperText={errors.email}
                         />
                     </Grid>
                     <Grid item lg={6} md={6} sm={12} >
-                        <Link
+                        {/* <Link
                             component="button"
                             variant="caption"
                             underline="hover"
@@ -127,7 +131,7 @@ function ProfileForm() {
                             }}
                         >
                             Change Password
-                        </Link>
+                        </Link> */}
                     </Grid>
                     <Grid item lg={6} md={6} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
                         <Button disabled={!validForm} variant="contained" size="medium" type="submit" sx={{ margin: "1rem 1rem" }}>

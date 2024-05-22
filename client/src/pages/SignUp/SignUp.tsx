@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,44 +15,20 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { registerUser } from 'api/auth';
 import { UserRegistrationRequest } from 'constants/types';
 import { useSnackbar } from 'contexts/SnackbarContext';
-import { isValidEmail, isValidPassword, isNotWhiteSpace, hasNonEmptyStringValue, hasEmptyStringValue } from 'helpers';
+import useValidateUserForm from 'hooks/useValidateUserForm';
 
 export default function SignUp() {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
-  const [values, setValues] = useState<UserRegistrationRequest>({
+  const { values, errors, validForm, validate } = useValidateUserForm({
     firstName: "",
     lastName: "",
     username: "",
     email: "",
     password: "",
   });
-  const [errors, setErrors] = useState<UserRegistrationRequest>({
-    firstName: "",
-    lastName: "",
-    username: "",
-    email: "",
-    password: "",
-  });
-  const [validForm, setValidForm] = useState(false);
-  
-  const validate = (fieldName: string, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    let errorMessage = "";
-    switch (fieldName) {
-      case "email":
-        errorMessage = !isValidEmail(e.target.value) ? "Invalid email" : "";
-        break;
-      case "password":
-        errorMessage = !isValidPassword(e.target.value) ? "Password must be at least 8 characters long, including at least 1 lowercase character, 1 uppercase character, 1 number, and 1 special character" : "";
-        break;
-      default:
-        errorMessage = !isNotWhiteSpace(e.target.value) ? "Cannot be empty" : "";
-        break;
-    }
-    setValues((values: UserRegistrationRequest) => ({ ...values, [fieldName]: e.target.value }));
-    setErrors((values: UserRegistrationRequest) => ({ ...values, [fieldName]: errorMessage }));
-    const isValid = !hasNonEmptyStringValue({ ...errors, [fieldName]: errorMessage }) && !hasEmptyStringValue({ ...values, [fieldName]: e.target.value })
-    setValidForm(isValid);
+  const handleRegistrationChange = (fieldName: keyof UserRegistrationRequest, value: string) => {
+    validate(fieldName, value, { validatePassword: true });
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -113,7 +89,7 @@ export default function SignUp() {
                 id="firstName"
                 name="firstName"
                 label="First Name"
-                onBlur={(e) => validate("firstName", e)}
+                onBlur={(e) => handleRegistrationChange("firstName", e.target.value)}
                 error={errors.firstName !== ""}
                 helperText={errors.firstName}
               />
@@ -126,7 +102,7 @@ export default function SignUp() {
                 name="lastName"
                 label="Last Name"
                 autoComplete="family-name"
-                onBlur={(e) => validate("lastName", e)}
+                onBlur={(e) => handleRegistrationChange("lastName", e.target.value)}
                 error={errors.lastName !== ""}
                 helperText={errors.lastName}
               />
@@ -139,7 +115,7 @@ export default function SignUp() {
                 name="username"
                 label="Username"
                 autoComplete="username"
-                onBlur={(e) => validate("username", e)}
+                onBlur={(e) => handleRegistrationChange("username", e.target.value)}
                 error={errors.username !== ""}
                 helperText={errors.username}
               />
@@ -152,7 +128,7 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                onBlur={(e) => validate("email", e)}
+                onBlur={(e) => handleRegistrationChange("email", e.target.value)}
                 error={errors.email !== ""}
                 helperText={errors.email}
               />
@@ -167,8 +143,8 @@ export default function SignUp() {
                 id="password"
                 autoComplete="new-password"
                 error={errors.password !== ""}
-                onBlur={(e) => validate("password", e)}
-                onChange={(e) => validate("password", e)}
+                onBlur={(e) => handleRegistrationChange("password", e.target.value)}
+                onChange={(e) => handleRegistrationChange("password", e.target.value)}
                 helperText={errors.password}
               />
             </Grid>
