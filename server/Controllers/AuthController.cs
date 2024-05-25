@@ -42,7 +42,7 @@ public class AuthController : ControllerBase
             return BadRequest("Username is already taken.");
         }
 
-        var newUser = await _authService.RegisterUser(userRegistrationRequest);
+        var newUser = await _authService.RegisterUserAsync(userRegistrationRequest);
         if (newUser == null)
         {
             return BadRequest("Failed to register user");
@@ -55,7 +55,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> LoginUser(UserLoginRequest userLoginRequest)
     {
-        var loggedInUser = await _authService.LoginUser(userLoginRequest.Identifier, userLoginRequest.Password);
+        var loggedInUser = await _authService.LoginUserAsync(userLoginRequest.Identifier, userLoginRequest.Password);
         if (loggedInUser == null)
         {
             return Unauthorized("Invalid credentials");

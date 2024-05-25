@@ -5,8 +5,8 @@ namespace server.Repositories;
 
 public interface IScoreRepository
 {
-    Task<IEnumerable<Score>> GetScores();
-    Task<IEnumerable<Score>> GetScoresByUserId(int id);
-    Task<Score?> GetScoreById(int id);
-    Task<Score> CreateScore(Score score);
+    Task<IEnumerable<Score>> GetScoresAsync();
+    Task<IEnumerable<Score>> GetScoresByUserIdAsync(int id);
+    Task<Score?> GetScoreByIdAsync(int id);
+    Task<Score> CreateScoreAsync(Score score);
 }

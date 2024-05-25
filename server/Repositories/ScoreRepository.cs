@@ -9,22 +9,22 @@ public class ScoreRepository: IScoreRepository
 	{
 		_context = speedTyperDbContext;
 	}
-    public async Task<IEnumerable<Score>> GetScores()
+    public async Task<IEnumerable<Score>> GetScoresAsync()
     {
         return await _context.Scores.ToListAsync();
     }
 
-    public async Task<IEnumerable<Score>> GetScoresByUserId(int id)
+    public async Task<IEnumerable<Score>> GetScoresByUserIdAsync(int id)
     {
         return await _context.Scores.Where(s => s.UserId == id).ToListAsync();
     }
 
-    public async Task<Score?> GetScoreById(int id)
+    public async Task<Score?> GetScoreByIdAsync(int id)
     {
         return await _context.Scores.FindAsync(id);
     }
 
-    public async Task<Score> CreateScore(Score score)
+    public async Task<Score> CreateScoreAsync(Score score)
     {
         var result = await _context.Scores.AddAsync(score);
         await _context.SaveChangesAsync();

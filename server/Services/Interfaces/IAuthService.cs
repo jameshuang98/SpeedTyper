@@ -11,6 +11,6 @@ public interface IAuthService
     bool IsAuthenticated();
     int? GetUserIdFromClaims();
     bool IsUserAuthorized(int userId);
-    Task<User> RegisterUser(UserRegistrationRequest userRegistrationRequest);
-    Task<User?> LoginUser(string username, string password);
+    Task<User> RegisterUserAsync(UserRegistrationRequest userRegistrationRequest);
+    Task<User?> LoginUserAsync(string username, string password);
 }

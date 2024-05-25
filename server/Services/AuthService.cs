@@ -90,7 +90,7 @@ public class AuthService : IAuthService
         return currentUserId.HasValue && currentUserId.Value == userId;
     }
 
-    public async Task<User> RegisterUser(UserRegistrationRequest userRegistrationRequest)
+    public async Task<User> RegisterUserAsync(UserRegistrationRequest userRegistrationRequest)
     {
         var newUser = new User
         {
@@ -101,21 +101,21 @@ public class AuthService : IAuthService
             Password = HashPassword(userRegistrationRequest.Password)
         };
 
-        return await _userRepository.CreateUser(newUser);
+        return await _userRepository.CreateUserAsync(newUser);
     }
 
-    public async Task<User?> LoginUser(string identifier, string password)
+    public async Task<User?> LoginUserAsync(string identifier, string password)
     {
         User? user;
 
         // Check if the identifier is a valid email
         if (IsValidEmail(identifier))
         {
-            user = await _userRepository.GetUserByPredicate(u => u.Email == identifier);
+            user = await _userRepository.GetUserByPredicateAsync(u => u.Email == identifier);
         }
         else
         {
-            user = await _userRepository.GetUserByPredicate(u => u.Username == identifier);
+            user = await _userRepository.GetUserByPredicateAsync(u => u.Username == identifier);
         }
 
         if (user == null || !VerifyPassword(password, user.Password))

@@ -13,12 +13,12 @@ public class UserRepository : IUserRepository
         _context = speedTyperDbContext;
     }
 
-    public async Task<IEnumerable<User>> GetUsers()
+    public async Task<IEnumerable<User>> GetUsersAsync()
     {
         return await _context.Users.ToListAsync();
     }
 
-    public async Task<User?> GetUserById(int id)
+    public async Task<User?> GetUserByIdAsync(int id)
     {
         var user = await _context.Users.FindAsync(id);
         if (user == null)
@@ -28,7 +28,7 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<User?> GetUserByPredicate(Expression<Func<User, bool>> predicate)
+    public async Task<User?> GetUserByPredicateAsync(Expression<Func<User, bool>> predicate)
     {
         var user = await _context.Users.FirstOrDefaultAsync(predicate);
         if (user == null)
@@ -38,14 +38,14 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<User> CreateUser(User user)
+    public async Task<User> CreateUserAsync(User user)
     {
         var createdUser = await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
         return createdUser.Entity;
     }
 
-    public async Task<User?> UpdateUser(User updatedUser)
+    public async Task<User?> UpdateUserAsync(User updatedUser)
     {
         var user = await _context.Users.FindAsync(updatedUser.Id);
 
@@ -63,7 +63,7 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<User?> DeleteUser(int id)
+    public async Task<User?> DeleteUserAsync(int id)
     {
         var user = await _context.Users.FindAsync(id);
         if (user == null)

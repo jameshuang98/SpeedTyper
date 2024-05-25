@@ -25,7 +25,7 @@ public class ScoreController : ControllerBase
     [HttpGet()]
     public async Task<ActionResult<IEnumerable<Score>>> GetScores()
     {
-        var scores = await _scoreRepository.GetScores();
+        var scores = await _scoreRepository.GetScoresAsync();
         if (scores == null)
         {
             return NotFound();
@@ -37,7 +37,7 @@ public class ScoreController : ControllerBase
     [HttpGet("leaderboard")]
     public async Task<ActionResult<IEnumerable<Score>>> GetScoreLeaderboard()
     {
-        var scores = await _scoreRepository.GetScores();
+        var scores = await _scoreRepository.GetScoresAsync();
         if (scores == null)
         {
             return NotFound();
@@ -55,7 +55,7 @@ public class ScoreController : ControllerBase
             return Forbid();
         }
 
-        var scores = await _scoreRepository.GetScoresByUserId(userId);
+        var scores = await _scoreRepository.GetScoresByUserIdAsync(userId);
         if (scores == null)
         {
             return NotFound();
@@ -68,7 +68,7 @@ public class ScoreController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Score>> GetScore(int id)
     {
-        var score = await _scoreRepository.GetScoreById(id);
+        var score = await _scoreRepository.GetScoreByIdAsync(id);
         if (score == null)
         {
             return NotFound();
@@ -80,7 +80,7 @@ public class ScoreController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Score>> CreateScore([FromBody] Score score)
     {
-        var newScore = await _scoreRepository.CreateScore(score);
+        var newScore = await _scoreRepository.CreateScoreAsync(score);
         if (newScore == null)
         {
             return NoContent();

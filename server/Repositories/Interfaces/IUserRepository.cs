@@ -8,10 +8,10 @@ namespace server.Repositories;
 
 public interface IUserRepository
 {
-    Task<IEnumerable<User>> GetUsers();
-    Task<User?> GetUserById(int id);
-    Task<User?> GetUserByPredicate(Expression<Func<User, bool>> predicate);
-    Task<User> CreateUser(User user);
-    Task<User?> UpdateUser(User user);
-    Task<User?> DeleteUser(int userId);
+    Task<IEnumerable<User>> GetUsersAsync();
+    Task<User?> GetUserByIdAsync(int id);
+    Task<User?> GetUserByPredicateAsync(Expression<Func<User, bool>> predicate);
+    Task<User> CreateUserAsync(User user);
+    Task<User?> UpdateUserAsync(User user);
+    Task<User?> DeleteUserAsync(int userId);
 }

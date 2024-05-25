@@ -13,7 +13,7 @@ public class UserService : IUserService
     }
     public async Task<bool> IsEmailTakenAsync(string email)
     {
-        var user = await _userRepository.GetUserByPredicate(user => user.Email == email);
+        var user = await _userRepository.GetUserByPredicateAsync(user => user.Email == email);
         if (user == null)
         {
             return false;
@@ -23,7 +23,7 @@ public class UserService : IUserService
 
     public async Task<bool> IsUsernameTakenAsync(string username)
     {
-        var user = await _userRepository.GetUserByPredicate(user => user.Username == username);
+        var user = await _userRepository.GetUserByPredicateAsync(user => user.Username == username);
         if (user == null)
         {
             return false;

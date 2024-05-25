@@ -29,7 +29,7 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
     {
-        var users = await _userRepository.GetUsers();
+        var users = await _userRepository.GetUsersAsync();
 
         if (users == null)
         {
@@ -42,7 +42,7 @@ public class UserController : ControllerBase
     [HttpGet("{id:int}", Name = "GetUser")]
     public async Task<ActionResult<UserDTO>> GetUser(int id)
     {
-        var user = await _userRepository.GetUserById(id);
+        var user = await _userRepository.GetUserByIdAsync(id);
 
         if (user == null)
         {
@@ -70,7 +70,7 @@ public class UserController : ControllerBase
             return BadRequest("Username is already taken.");
         }
 
-        var updatedUser = await _userRepository.UpdateUser(user);
+        var updatedUser = await _userRepository.UpdateUserAsync(user);
         if (updatedUser == null)
         {
             return NotFound();
@@ -87,7 +87,7 @@ public class UserController : ControllerBase
             return Forbid();
         }
 
-        var deletedUser = await _userRepository.DeleteUser(id);
+        var deletedUser = await _userRepository.DeleteUserAsync(id);
         if (deletedUser == null)
         {
             return NotFound();
