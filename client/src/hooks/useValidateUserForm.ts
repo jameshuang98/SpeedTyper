@@ -33,7 +33,7 @@ const useValidateForm = <T extends UserForm>(initialValues: InitialValues<T>) =>
                 errorMessage = (options?.validatePassword && !isValidPassword(value)) ? "Password must be at least 8 characters long, including at least 1 lowercase character, 1 uppercase character, 1 number, and 1 special character" : "";
                 break;
             case "profileImageURL":
-                errorMessage = (options?.validateProfileImageURL) ? "Invalid profile picture" : "";
+                errorMessage = (options?.validateProfileImageURL && !value.trim()) ? "Invalid profile picture" : "";
                 break;
             default:
                 errorMessage = (!value.trim()) ? "Cannot be empty" : "";

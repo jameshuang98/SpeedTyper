@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { Paper, Divider, Grid, Typography, TextField, Link, Button, Box } from '@mui/material';
+import { Paper, Divider, Grid, Typography, TextField, Link, Button, Box, Avatar } from '@mui/material';
 import { compare } from 'fast-json-patch';
 
-import { UserDTO, UserRegistrationRequest } from 'constants/types';
+import { UserDTO } from 'constants/types';
 import { patchUser } from 'api/users';
 import { useAuth } from 'contexts/AuthContext';
 import { useSnackbar } from 'contexts/SnackbarContext';
 import useValidateUserForm from 'hooks/useValidateUserForm';
+import UploadWidget from 'components/UploadWidget/UploadWidget';
 
 import classes from "./ProfileForm.module.scss";
 
@@ -24,8 +25,8 @@ function ProfileForm() {
     };
     const { values, errors, validForm, validate } = useValidateUserForm(originalData);
 
-    const handleProfileChange = (fieldName: keyof UserRegistrationRequest, value: string) => {
-        validate(fieldName, value, { validatePassword: false, validateProfileImageURL: false });
+    const handleProfileChange = (fieldName: keyof UserDTO, value: string) => {
+        validate(fieldName, value, { validatePassword: false });
     };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -119,6 +120,20 @@ function ProfileForm() {
                             helperText={errors.email}
                         />
                     </Grid>
+                    <Grid item lg={6} md={6} sm={12} sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px" }}>
+                        <Typography variant="caption" sx={{ fontWeight: "bold" }}>Profile Picture</Typography>
+                        <UploadWidget setImage={(url: string) => handleProfileChange("profileImageURL", url)} />
+                        {
+                            values.profileImageURL && values.profileImageURL !== user?.profileImageURL &&
+                            (
+                                <div className={classes.flexRow}>
+                                    <Avatar sx={{ width: 32, height: 32 }} src={values.profileImageURL}></Avatar>
+                                    <span style={{fontSize: ".65rem"}}>Successfully uploaded!</span>
+                                </div>
+                            )
+                        }
+
+                    </Grid>
                     <Grid item lg={6} md={6} sm={12} >
                         {/* <Link
                             component="button"
@@ -132,7 +147,7 @@ function ProfileForm() {
                             Change Password
                         </Link> */}
                     </Grid>
-                    <Grid item lg={6} md={6} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+                    <Grid item lg={12} md={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
                         <Button disabled={!validForm} variant="contained" size="medium" type="submit" sx={{ margin: "1rem 1rem" }}>
                             <Typography variant="subtitle2">Save</Typography>
                         </Button>

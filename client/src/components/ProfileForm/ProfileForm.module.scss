@@ -11,5 +11,9 @@
     padding: .5rem;
 }
 
-
-
+.flexRow {
+    display:flex;
+    justify-content: row;
+    gap: 8px;
+    align-items: center;
+}
