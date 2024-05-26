@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using server.Models.DTOs;
-using server.Models;
 using server.Repositories;
 using server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Azure.Core;
 
 namespace server.Controllers;
 
@@ -25,7 +23,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<UserDTO>> RegisterUser([FromBody] UserRegistrationRequest userRegistrationRequest)
+    public async Task<ActionResult<string>> RegisterUser([FromBody] UserRegistrationRequestDTO userRegistrationRequest)
     {
         if (!ModelState.IsValid)
         {
@@ -53,7 +51,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> LoginUser(UserLoginRequest userLoginRequest)
+    public async Task<ActionResult<string>> LoginUser(UserLoginRequestDTO userLoginRequest)
     {
         var loggedInUser = await _authService.LoginUserAsync(userLoginRequest.Identifier, userLoginRequest.Password);
         if (loggedInUser == null)

@@ -1,13 +1,8 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using server.Extensions;
-using server.Models;
 using server.Models.DTOs;
-using server.Models.Entities;
-using server.Services;
 using server.Services.Interfaces;
 
 namespace server.Repositories;

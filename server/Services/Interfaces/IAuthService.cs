@@ -1,4 +1,4 @@
-﻿using server.Models;
+﻿using server.Models.DTOs;
 using server.Models.Entities;
 
 namespace server.Services.Interfaces;
@@ -11,6 +11,6 @@ public interface IAuthService
     bool IsAuthenticated();
     int? GetUserIdFromClaims();
     bool IsUserAuthorized(int userId);
-    Task<User> RegisterUserAsync(UserRegistrationRequest userRegistrationRequest);
+    Task<User> RegisterUserAsync(UserRegistrationRequestDTO userRegistrationRequest);
     Task<User?> LoginUserAsync(string username, string password);
 }

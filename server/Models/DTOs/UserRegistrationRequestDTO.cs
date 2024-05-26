@@ -1,9 +1,9 @@
 ﻿using server.Validators;
 using System.ComponentModel.DataAnnotations;
 
-namespace server.Models;
+namespace server.Models.DTOs;
 
-public class UserRegistrationRequest
+public class UserRegistrationRequestDTO
 {
     [Required(ErrorMessage = "First name is required.")]
     public string FirstName { get; set; } = string.Empty;

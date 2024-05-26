@@ -9,7 +9,6 @@ public static class DTOConversions
     {
         return new UserDTO
         {
-            Id = user.Id,
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email,

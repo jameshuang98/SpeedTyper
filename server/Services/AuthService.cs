@@ -1,5 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using server.Models;
+using server.Models.DTOs;
 using server.Models.Entities;
 using server.Repositories;
 using server.Services.Interfaces;
@@ -90,7 +90,7 @@ public class AuthService : IAuthService
         return currentUserId.HasValue && currentUserId.Value == userId;
     }
 
-    public async Task<User> RegisterUserAsync(UserRegistrationRequest userRegistrationRequest)
+    public async Task<User> RegisterUserAsync(UserRegistrationRequestDTO userRegistrationRequest)
     {
         var newUser = new User
         {

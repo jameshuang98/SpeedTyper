@@ -1,5 +1,4 @@
-﻿using System;
-using server.Models.Entities;
+﻿using server.Models.Entities;
 
 namespace server.Repositories;
 
