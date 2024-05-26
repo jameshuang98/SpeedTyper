@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Paper, Divider, Grid, Typography, TextField, Link, Button, Box } from '@mui/material';
 import { compare } from 'fast-json-patch';
@@ -14,13 +14,14 @@ import classes from "./ProfileForm.module.scss";
 function ProfileForm() {
     const { user, login } = useAuth();
     const { showSnackbar } = useSnackbar();
-    const originalData : UserDTO = {
+    const [responseError, setReponseError] = useState("");
+    const originalData: UserDTO = {
         firstName: user!.firstName,
         lastName: user!.lastName,
         username: user!.username,
         email: user!.email,
         profileImageURL: user!.profileImageURL
-      };
+    };
     const { values, errors, validForm, validate } = useValidateUserForm(originalData);
 
     const handleProfileChange = (fieldName: keyof UserRegistrationRequest, value: string) => {
@@ -37,8 +38,8 @@ function ProfileForm() {
                 login(response.data);
                 showSnackbar("Changes Saved", <CheckCircleOutlineIcon fontSize="small" />);
             }
-        } catch (err) {
-            console.log(err)
+        } catch (err: any) {
+            setReponseError(err.response.data);
         }
     };
 
@@ -48,6 +49,12 @@ function ProfileForm() {
             <Divider />
             <Box component="form" noValidate onSubmit={handleSubmit}>
                 <Grid container spacing={4} sx={{ padding: "1.5rem" }}>
+                    {
+                        responseError &&
+                        <Grid item lg={12} md={12} sm={12} sx={{ display: "flex", flexDirection: "column" }}>
+                            <Typography variant="caption" sx={{ color: "red" }}>*{responseError}</Typography>
+                        </Grid>
+                    }
                     <Grid item lg={6} md={6} sm={12} sx={{ display: "flex", flexDirection: "column" }}>
                         <Typography variant="caption" sx={{ fontWeight: "bold" }}>First Name</Typography>
                         <TextField

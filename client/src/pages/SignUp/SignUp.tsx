@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -20,6 +20,7 @@ import useValidateUserForm from 'hooks/useValidateUserForm';
 export default function SignUp() {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
+  const [responseError, setReponseError] = useState("");
   const { values, errors, validForm, validate } = useValidateUserForm({
     firstName: "",
     lastName: "",
@@ -48,8 +49,8 @@ export default function SignUp() {
         showSnackbar("Registration Successful", <CheckCircleOutlineIcon fontSize="small" />);
         navigate("/");
       };
-    } catch (err) {
-      console.log(err)
+    } catch (err: any) {
+      setReponseError(err.response.data);
     }
   };
 
@@ -80,6 +81,12 @@ export default function SignUp() {
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
+            {
+              responseError &&
+              <Grid item lg={12} md={12} sm={12} sx={{ display: "flex", flexDirection: "column" }}>
+                <Typography variant="caption" sx={{ color: "red" }}>*{responseError}</Typography>
+              </Grid>
+            }
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="given-name"
