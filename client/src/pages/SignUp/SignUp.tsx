@@ -14,12 +14,19 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 import { registerUser } from 'api/auth';
 import { UserRegistrationRequest } from 'constants/types';
-import { useSnackbar } from 'contexts/SnackbarContext';
 import useValidateUserForm from 'hooks/useValidateUserForm';
+import { useSnackbar } from 'contexts/SnackbarContext';
+import { useAuth } from 'contexts/AuthContext';
 
 export default function SignUp() {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
+  const { user, login } = useAuth();
+  if (user) {
+    console.log("user", user)
+    navigate("/");
+  };
+
   const [responseError, setReponseError] = useState("");
   const { values, errors, validForm, validate } = useValidateUserForm({
     firstName: "",
@@ -47,6 +54,7 @@ export default function SignUp() {
       const registerResponse = await registerUser(userRegistrationRequest);
       if (registerResponse && registerResponse.statusCode === 201) {
         showSnackbar("Registration Successful", <CheckCircleOutlineIcon fontSize="small" />);
+        login(registerResponse.data);
         navigate("/");
       };
     } catch (err: any) {

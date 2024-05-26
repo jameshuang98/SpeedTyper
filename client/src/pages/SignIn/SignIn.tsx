@@ -20,9 +20,12 @@ import { useSnackbar } from 'contexts/SnackbarContext';
 import { useAuth } from 'contexts/AuthContext';
 
 export default function SignIn() {
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const { user, login } = useAuth();
   const { showSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+  if (user) {
+    navigate("/");
+  };
   const [loginError, setLoginError] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
