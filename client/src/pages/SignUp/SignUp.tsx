@@ -23,7 +23,6 @@ export default function SignUp() {
   const { showSnackbar } = useSnackbar();
   const { user, login } = useAuth();
   if (user) {
-    console.log("user", user)
     navigate("/");
   };
 

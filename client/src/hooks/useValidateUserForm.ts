@@ -23,6 +23,12 @@ const useValidateForm = <T extends UserForm>(initialValues: InitialValues<T>) =>
     const [errors, setErrors] = useState<FormErrors>({});
     const [validForm, setValidForm] = useState(false);
 
+    const resetForm = (data: InitialValues<T>) => {
+        setValues(data);
+        setErrors({});
+        setValidForm(false);
+    }
+
     const validate = (fieldName: keyof T, value: string, options?: ValidationOptions) => {
         let errorMessage = "";
         switch (fieldName) {
@@ -47,7 +53,7 @@ const useValidateForm = <T extends UserForm>(initialValues: InitialValues<T>) =>
         setValidForm(isValid);
     };
 
-    return { values, errors, validForm, validate };
+    return { values, errors, validForm, validate, resetForm };
 }
 
 export default useValidateForm;

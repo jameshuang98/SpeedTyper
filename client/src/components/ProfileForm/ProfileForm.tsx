@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Paper, Divider, Grid, Typography, TextField, Link, Button, Box, Avatar } from '@mui/material';
 import { compare } from 'fast-json-patch';
@@ -11,19 +11,35 @@ import useValidateUserForm from 'hooks/useValidateUserForm';
 import UploadWidget from 'components/UploadWidget/UploadWidget';
 
 import classes from "./ProfileForm.module.scss";
+import { areObjectsEqual } from 'helpers';
 
 function ProfileForm() {
     const { user, login } = useAuth();
     const { showSnackbar } = useSnackbar();
     const [responseError, setReponseError] = useState("");
-    const originalData: UserDTO = {
+    const [originalData, setOriginalData] = useState<UserDTO>({
         firstName: user!.firstName,
         lastName: user!.lastName,
         username: user!.username,
         email: user!.email,
         profileImageURL: user!.profileImageURL
-    };
-    const { values, errors, validForm, validate } = useValidateUserForm(originalData);
+    });
+    const { values, errors, validForm, validate, resetForm } = useValidateUserForm(originalData);
+
+    useEffect(() => {
+        const userData = {
+            firstName: user!.firstName,
+            lastName: user!.lastName,
+            username: user!.username,
+            email: user!.email,
+            profileImageURL: user!.profileImageURL
+        };
+        if (!areObjectsEqual(originalData, userData)) {
+            console.log("setting")
+            setOriginalData(userData)
+            resetForm(userData)
+        }
+    }, [user])
 
     const handleProfileChange = (fieldName: keyof UserDTO, value: string) => {
         validate(fieldName, value, { validatePassword: false });
@@ -128,7 +144,7 @@ function ProfileForm() {
                             (
                                 <div className={classes.flexRow}>
                                     <Avatar sx={{ width: 32, height: 32 }} src={values.profileImageURL}></Avatar>
-                                    <span style={{fontSize: ".65rem"}}>Successfully uploaded!</span>
+                                    <span style={{ fontSize: ".65rem" }}>Successfully uploaded!</span>
                                 </div>
                             )
                         }
