@@ -97,7 +97,7 @@ public class UserController : ControllerBase
             ModelState.AddModelError(error.AffectedObject?.ToString() ?? string.Empty, error.ErrorMessage);
         });
 
-        if (!TryValidateModel(userToUpdate))
+        if (!TryValidateModel(userDTO))
         {
             return BadRequest(ModelState);
         }
