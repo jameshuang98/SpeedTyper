@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 
-import { ScoreItem, SortOption } from "constants/types";
+import { ScoreDTO, SortOption } from "constants/types";
 
 // Check if a key is a valid character, punctuation, or number
 export function isValidKey(key: string): boolean {
@@ -54,7 +54,7 @@ export function areObjectsEqual(obj1: any, obj2: any) {
 export function sortResults(option: SortOption) {
     switch (option) {
         case "recent":
-            return ((a: ScoreItem, b: ScoreItem) => {
+            return ((a: ScoreDTO, b: ScoreDTO) => {
                 // Compare dates first
                 const dateA = new Date(a.createdDate);
                 const dateB = new Date(b.createdDate);
@@ -69,7 +69,7 @@ export function sortResults(option: SortOption) {
             });
         case "highest":
         default:
-            return ((a: ScoreItem, b: ScoreItem) => b.correctWords - a.correctWords);
+            return ((a: ScoreDTO, b: ScoreDTO) => b.correctWords - a.correctWords);
     }
 }
 

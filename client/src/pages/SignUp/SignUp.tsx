@@ -90,7 +90,7 @@ export default function SignUp() {
                 name="firstName"
                 label="First Name"
                 onBlur={(e) => handleRegistrationChange("firstName", e.target.value)}
-                error={errors.firstName !== ""}
+                error={!!errors.firstName}
                 helperText={errors.firstName}
               />
             </Grid>
@@ -103,7 +103,7 @@ export default function SignUp() {
                 label="Last Name"
                 autoComplete="family-name"
                 onBlur={(e) => handleRegistrationChange("lastName", e.target.value)}
-                error={errors.lastName !== ""}
+                error={!!errors.lastName}
                 helperText={errors.lastName}
               />
             </Grid>
@@ -116,7 +116,7 @@ export default function SignUp() {
                 label="Username"
                 autoComplete="username"
                 onBlur={(e) => handleRegistrationChange("username", e.target.value)}
-                error={errors.username !== ""}
+                error={!!errors.username}
                 helperText={errors.username}
               />
             </Grid>
@@ -129,7 +129,7 @@ export default function SignUp() {
                 name="email"
                 autoComplete="email"
                 onBlur={(e) => handleRegistrationChange("email", e.target.value)}
-                error={errors.email !== ""}
+                error={!!errors.email}
                 helperText={errors.email}
               />
             </Grid>
@@ -142,9 +142,9 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="new-password"
-                error={errors.password !== ""}
                 onBlur={(e) => handleRegistrationChange("password", e.target.value)}
                 onChange={(e) => handleRegistrationChange("password", e.target.value)}
+                error={!!errors.password}
                 helperText={errors.password}
               />
             </Grid>

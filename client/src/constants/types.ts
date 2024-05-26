@@ -6,8 +6,9 @@ export interface InputWord {
     isCorrect: boolean;
 }
 
-export interface ScoreItem {
+export interface ScoreDTO {
     id: number;
+    userId: number;
     correctWords: number;
     incorrectWords: number;
     characters: number;
@@ -36,6 +37,24 @@ export interface UserRegistrationRequest {
     email: string,
     username: string,
     password: string
+}
+
+export interface UserDTO extends UserForm {
+    firstName: string,
+    lastName: string,
+    username: string,
+    email: string,
+    profileImageURL: string
+}
+
+// Define a generic type for form data
+export interface UserForm {
+    firstName: string;
+    lastName: string;
+    username: string;
+    email: string;
+    password?: string; // Make password optional
+    profileImageURL?: string; // Make profileImageURL optional
 }
 
 export interface ApiResponse {

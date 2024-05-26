@@ -1,53 +1,53 @@
 import { useState } from 'react';
 
-import { UserRegistrationRequest } from 'constants/types';
 import { areObjectsEqual, hasEmptyStringValue, hasNonEmptyStringValue, isNotWhiteSpace, isValidEmail, isValidPassword } from 'helpers';
+import { UserForm } from 'constants/types';
 
+// Define a generic type for form errors
 interface FormErrors {
-    firstName: string;
-    lastName: string;
-    username: string;
-    email: string;
-    password: string;
+    [key: string]: string;
 }
 
+// Define a generic type for validation options
 interface ValidationOptions {
-    validatePassword?: boolean; // Optional parameter to indicate whether to validate the password field
+    [key: string]: boolean | undefined;
 }
 
-const useValidateUserForm = (initialValues: UserRegistrationRequest) => {
-    const [values, setValues] = useState<UserRegistrationRequest>(initialValues);
-    const [errors, setErrors] = useState<FormErrors>({
-        firstName: "",
-        lastName: "",
-        username: "",
-        email: "",
-        password: "",
-    });
+// Define a generic type for initial form values
+type InitialValues<T> = {
+    [K in keyof T]: T[K];
+}
+
+const useValidateForm = <T extends UserForm>(initialValues: InitialValues<T>) => {
+    const [values, setValues] = useState<T>(initialValues);
+    const [errors, setErrors] = useState<FormErrors>({});
     const [validForm, setValidForm] = useState(false);
 
-    const validate = (fieldName: keyof UserRegistrationRequest, value: string, options?: ValidationOptions) => {
+    const validate = (fieldName: keyof T, value: string, options?: ValidationOptions) => {
         let errorMessage = "";
         switch (fieldName) {
             case "email":
-                errorMessage = !isValidEmail(value) ? "Invalid email" : "";
+                errorMessage = (value && !isValidEmail(value)) ? "Invalid email" : "";
                 break;
             case "password":
-                errorMessage = options?.validatePassword && !isValidPassword(value) ? "Password must be at least 8 characters long, including at least 1 lowercase character, 1 uppercase character, 1 number, and 1 special character" : "";
+                errorMessage = (options?.validatePassword && !isValidPassword(value)) ? "Password must be at least 8 characters long, including at least 1 lowercase character, 1 uppercase character, 1 number, and 1 special character" : "";
+                break;
+            case "profileImageURL":
+                errorMessage = (options?.validateProfileImageURL) ? "Invalid profile picture" : "";
                 break;
             default:
-                errorMessage = !isNotWhiteSpace(value) ? "Cannot be empty" : "";
+                errorMessage = (!value.trim()) ? "Cannot be empty" : "";
                 break;
         }
-        setValues((prevValues: UserRegistrationRequest) => ({ ...prevValues, [fieldName]: value }));
-        setErrors((prevErrors: FormErrors) => ({ ...prevErrors, [fieldName]: errorMessage }));
+        setValues(prevValues => ({ ...prevValues, [fieldName]: value }));
+        setErrors(prevErrors => ({ ...prevErrors, [fieldName]: errorMessage }));
 
-        // Check if any error exists and if all fields are non-empty
-        const isValid = !hasNonEmptyStringValue({ ...errors, [fieldName]: errorMessage }) && !hasEmptyStringValue({ ...values, [fieldName]: value }) && !areObjectsEqual({ ...values, [fieldName]: value }, initialValues)
+        // Check if any error exists, if all fields are non-empty
+        const isValid = !hasNonEmptyStringValue({ ...errors, [fieldName]: errorMessage }) && !areObjectsEqual({ ...values, [fieldName]: value }, initialValues)
         setValidForm(isValid);
     };
 
     return { values, errors, validForm, validate };
 }
 
-export default useValidateUserForm;
+export default useValidateForm;

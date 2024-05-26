@@ -44,7 +44,7 @@ function Appbar() {
                             aria-haspopup="true"
                             aria-expanded={open ? 'true' : undefined}
                         >
-                            <Avatar sx={{ width: 32, height: 32 }}>{user.firstName[0]}</Avatar>
+                            <Avatar sx={{ width: 32, height: 32 }} src={user.profileImageURL}>{user.firstName[0]}</Avatar>
                         </IconButton>
                         <Menu
                             anchorEl={anchorEl}

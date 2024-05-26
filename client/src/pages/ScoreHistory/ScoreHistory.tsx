@@ -6,7 +6,7 @@ import 'react-multi-carousel/lib/styles.css';
 import ResultCard from 'components/ResultCard/ResultCard';
 import useService from 'hooks/useService';
 import { getUserScores } from 'api/scores';
-import { SortOption, ScoreItem } from 'constants/types.js';
+import { SortOption, ScoreDTO } from 'constants/types.js';
 import { useAuth } from 'contexts/AuthContext';
 import { sortResults } from 'helpers';
 
@@ -53,7 +53,7 @@ export default function ScoreHistory() {
     const resultCards = Array.isArray(data) ?
         data.sort(sortResults(sortOption))
             .slice(0, 10) // take the first 10
-            .map((s: ScoreItem, i) => (
+            .map((s: ScoreDTO, i) => (
                 <ResultCard
                     key={i}
                     title={(new Date(s.createdDate)).toLocaleDateString(undefined, { month: 'short', day: '2-digit', year: 'numeric' })}

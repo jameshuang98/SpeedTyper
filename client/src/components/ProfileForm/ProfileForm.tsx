@@ -1,8 +1,9 @@
 import React from 'react';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Paper, Divider, Grid, Typography, TextField, Link, Button, Box } from '@mui/material';
+import { compare } from 'fast-json-patch';
 
-import { User, UserRegistrationRequest } from 'constants/types';
+import { UserDTO, UserRegistrationRequest } from 'constants/types';
 import { patchUser } from 'api/users';
 import { useAuth } from 'contexts/AuthContext';
 import { useSnackbar } from 'contexts/SnackbarContext';
@@ -13,33 +14,25 @@ import classes from "./ProfileForm.module.scss";
 function ProfileForm() {
     const { user, login } = useAuth();
     const { showSnackbar } = useSnackbar();
-    const { values, errors, validForm, validate } = useValidateUserForm({
+    const originalData : UserDTO = {
         firstName: user!.firstName,
         lastName: user!.lastName,
         username: user!.username,
         email: user!.email,
-        password: "password123!" // placeholder password
-    });
+        profileImageURL: user!.profileImageURL
+      };
+    const { values, errors, validForm, validate } = useValidateUserForm(originalData);
 
     const handleProfileChange = (fieldName: keyof UserRegistrationRequest, value: string) => {
-        validate(fieldName, value, { validatePassword: false });
+        validate(fieldName, value, { validatePassword: false, validateProfileImageURL: false });
     };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const data = Object.fromEntries(formData.entries());
-        const userData: User = {
-            id: user!.id,
-            firstName: data.firstName as string,
-            lastName: data.lastName as string,
-            username: data.username as string,
-            email: data.email as string,
-            profileImageURL: user!.profileImageURL
-        };
+        const patchDocument = compare(originalData, values); // Create the patch document
 
         try {
-            const response = await patchUser(userData);
+            const response = await patchUser(user!.id, patchDocument);
             if (response && response.statusCode === 200) {
                 login(response.data);
                 showSnackbar("Changes Saved", <CheckCircleOutlineIcon fontSize="small" />);
@@ -47,7 +40,6 @@ function ProfileForm() {
         } catch (err) {
             console.log(err)
         }
-
     };
 
     return (
@@ -68,7 +60,7 @@ function ProfileForm() {
                             // label="First Name"
                             defaultValue={user?.firstName}
                             onBlur={(e) => handleProfileChange("firstName", e.target.value)}
-                            error={errors.firstName !== ""}
+                            error={!!errors.firstName}
                             helperText={errors.firstName}
                         />
                     </Grid>
@@ -84,7 +76,7 @@ function ProfileForm() {
                             // label="Last Name"
                             defaultValue={user?.lastName}
                             onBlur={(e) => handleProfileChange("lastName", e.target.value)}
-                            error={errors.lastName !== ""}
+                            error={!!errors.lastName}
                             helperText={errors.lastName}
                         />
                     </Grid>
@@ -100,7 +92,7 @@ function ProfileForm() {
                             // label="Username"
                             defaultValue={user?.username}
                             onBlur={(e) => handleProfileChange("username", e.target.value)}
-                            error={errors.username !== ""}
+                            error={!!errors.username}
                             helperText={errors.username}
                         />
                     </Grid>
@@ -116,7 +108,7 @@ function ProfileForm() {
                             // label="Email"
                             defaultValue={user?.email}
                             onBlur={(e) => handleProfileChange("email", e.target.value)}
-                            error={errors.email !== ""}
+                            error={!!errors.email}
                             helperText={errors.email}
                         />
                     </Grid>
