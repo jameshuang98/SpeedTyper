@@ -1,6 +1,8 @@
 ﻿using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using server.Extensions;
 using server.Models;
 using server.Models.DTOs;
@@ -52,29 +54,65 @@ public class UserController : ControllerBase
         return Ok(userDTO);
     }
 
-    [HttpPut()]
-    public async Task<ActionResult<User>> UpdateUser([FromBody] User user)
+    [HttpPatch("{id}")]
+    public async Task<ActionResult<string>> UpdateUser(int id, [FromBody] JsonPatchDocument<UserDTO> patchDoc)
     {
-        if (!_authService.IsUserAuthorized(user.Id))
+        if (patchDoc == null)
+        {
+            return BadRequest();
+        }
+
+        if (!_authService.IsUserAuthorized(id))
         {
             return Forbid();
         }
 
-        if (await _userService.IsEmailTakenAsync(user.Email))
+        var userToUpdate = await _userRepository.GetUserByIdAsync(id);
+        if (userToUpdate == null)
         {
-            return BadRequest("Email is already taken.");
+            return NotFound();
+        }
+        var userDTO = userToUpdate.ConvertToDTO();
+
+        var emailOperation = patchDoc.Operations.FirstOrDefault(op => op.path.Equals("/email", StringComparison.OrdinalIgnoreCase));
+        var usernameOperation = patchDoc.Operations.FirstOrDefault(op => op.path.Equals("/username", StringComparison.OrdinalIgnoreCase));
+
+        // Validate email if it is being changed and not null
+        if (emailOperation != null && emailOperation.value != null)
+        {
+            var newEmail = emailOperation.value.ToString();
+            if (await _userService.IsEmailTakenAsync(newEmail!))
+            {
+                return BadRequest("Email is already taken.");
+            }
         }
 
-        if (await _userService.IsUsernameTakenAsync(user.Username))
+        // Validate username if it is being changed and not null
+        if (usernameOperation != null && usernameOperation.value != null)
         {
-            return BadRequest("Username is already taken.");
+            var newUsername = usernameOperation.value.ToString();
+            if (await _userService.IsUsernameTakenAsync(newUsername!))
+            {
+                return BadRequest("Username is already taken.");
+            }
         }
 
-        var updatedUser = await _userRepository.UpdateUserAsync(user);
+        patchDoc.ApplyTo(userDTO, (error) =>
+        {
+            ModelState.AddModelError(error.AffectedObject?.ToString() ?? string.Empty, error.ErrorMessage);
+        });
+
+        if (!TryValidateModel(userToUpdate))
+        {
+            return BadRequest(ModelState);
+        }
+
+        var updatedUser = await _userRepository.UpdateUserAsync(id, userDTO);
         if (updatedUser == null)
         {
             return NotFound();
         }
+
         string token = _authService.GenerateToken(updatedUser);
         return Ok(token);
     }

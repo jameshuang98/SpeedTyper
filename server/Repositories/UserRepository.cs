@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using server.Models;
+using server.Models.DTOs;
 using server.Models.Entities;
 using server.Services.Interfaces;
 using System.Linq.Expressions;
@@ -45,20 +46,21 @@ public class UserRepository : IUserRepository
         return createdUser.Entity;
     }
 
-    public async Task<User?> UpdateUserAsync(User updatedUser)
+    public async Task<User?> UpdateUserAsync(int id, UserDTO updatedUser)
     {
-        var user = await _context.Users.FindAsync(updatedUser.Id);
-
+        var user = await _context.Users.FindAsync(id);
         if (user == null)
         {
             return null;
         }
-        user.FirstName = updatedUser.FirstName ?? user.FirstName;
-        user.LastName = updatedUser.LastName ?? user.LastName;
-        user.Username = updatedUser.Username ?? user.Username;
-        user.Email = updatedUser.Email ?? user.Email;
-        user.ProfileImageURL = updatedUser.ProfileImageURL ?? user.ProfileImageURL;
 
+        user.FirstName = updatedUser.FirstName;
+        user.LastName = updatedUser.LastName;
+        user.Username = updatedUser.Username;
+        user.Email = updatedUser.Email;
+        user.ProfileImageURL = updatedUser.ProfileImageURL;
+
+        _context.Users.Update(user);
         await _context.SaveChangesAsync();
         return user;
     }
