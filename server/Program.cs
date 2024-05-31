@@ -76,7 +76,12 @@ namespace server
 
             builder.Services.AddCors(options =>
             {
-                var allowedOrigins = builder.Configuration.GetSection("AllowedCorsOrigins").Get<string[]>();
+                var allowedOrigins = Environment.GetEnvironmentVariable("AllowedCorsOrigins")?.Split(',');
+                if (allowedOrigins == null)
+                {
+                    allowedOrigins = builder.Configuration.GetSection("AllowedCorsOrigins").Get<string[]>();
+                }
+
                 options.AddPolicy("AllowCors",
                     builder =>
                     {
