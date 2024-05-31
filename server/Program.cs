@@ -36,11 +36,12 @@ namespace server
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
-            var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
-            if (jwtKey == null)
-            {
-                jwtKey = builder.Configuration.GetSection("Jwt:Key").Value!;
-            }
+            builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            // Load configuration from environment variables
+            builder.Configuration.AddEnvironmentVariables();
+
+            var jwtKey = builder.Configuration.GetValue<string>("JWT_KEY")!;
             builder.Services.AddAuthentication().AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -81,16 +82,13 @@ namespace server
 
             builder.Services.AddCors(options =>
             {
-                var allowedOrigins = Environment.GetEnvironmentVariable("AllowedCorsOrigins")?.Split(',');
-                if (allowedOrigins == null)
-                {
-                    allowedOrigins = builder.Configuration.GetSection("AllowedCorsOrigins").Get<string[]>();
-                }
+                string allowedCorsOrigins = builder.Configuration.GetValue<string>("AllowedCorsOrigins") ?? "";
+                string[] corsOrigins = allowedCorsOrigins.Split(',');
 
                 options.AddPolicy("AllowCors",
                     builder =>
                     {
-                        builder.WithOrigins(allowedOrigins ?? [])
+                        builder.WithOrigins(corsOrigins ?? [])
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                     });
