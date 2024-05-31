@@ -36,6 +36,11 @@ namespace server
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
+            var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+            if (jwtKey == null)
+            {
+                jwtKey = builder.Configuration.GetSection("Jwt:Key").Value!;
+            }
             builder.Services.AddAuthentication().AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -44,7 +49,7 @@ namespace server
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateLifetime = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt:Key").Value!))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
                 };
             });
 
