@@ -36,10 +36,22 @@ namespace server
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
-            builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-
             // Load configuration from environment variables
             builder.Configuration.AddEnvironmentVariables();
+
+            var connection = String.Empty;
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.Development.json");
+                connection = builder.Configuration.GetConnectionString("LOCAL_SQL_CONNECTIONSTRING");
+            }
+            else
+            {
+                builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
+            }
+
+            builder.Services.AddDbContext<SpeedTyperDbContext>(options => options.UseSqlServer(connection));
 
             var jwtKey = builder.Configuration.GetValue<string>("JWT_KEY")!;
             builder.Services.AddAuthentication().AddJwtBearer(options =>
@@ -61,18 +73,6 @@ namespace server
             //        .Build();
             //});
 
-            var connection = String.Empty;
-            if (builder.Environment.IsDevelopment())
-            {
-                //builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.Development.json");
-                connection = builder.Configuration.GetConnectionString("LOCAL_SQL_CONNECTIONSTRING");
-            }
-            else
-            {
-                connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
-            }
-
-            builder.Services.AddDbContext<SpeedTyperDbContext>(options => options.UseSqlServer(connection));
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IScoreRepository, ScoreRepository>();
