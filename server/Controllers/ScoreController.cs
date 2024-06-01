@@ -4,6 +4,7 @@ using server.Extensions;
 using server.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using server.Services.Interfaces;
+using server.Models.DTOs;
 
 namespace server.Controllers;
 
@@ -78,8 +79,22 @@ public class ScoreController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Score>> CreateScore([FromBody] Score score)
+    public async Task<ActionResult<Score>> CreateScore([FromBody] CreateScoreDTO createScoreDTO)
     {
+        if (!_authService.IsUserAuthorized(createScoreDTO.UserId))
+        {
+            return Forbid();
+        }
+
+        var score = new Score
+        {
+            UserId = createScoreDTO.UserId,
+            CorrectWords = createScoreDTO.CorrectWords,
+            IncorrectWords = createScoreDTO.IncorrectWords,
+            Characters = createScoreDTO.Characters,
+            CreatedDate = DateTime.Now
+        };
+
         var newScore = await _scoreRepository.CreateScoreAsync(score);
         if (newScore == null)
         {

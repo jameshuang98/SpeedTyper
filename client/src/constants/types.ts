@@ -15,6 +15,13 @@ export interface ScoreDTO {
     createdDate: string;
 }
 
+export interface CreateScoreDTO {
+    userId: number;
+    correctWords: number;
+    incorrectWords: number;
+    characters: number;
+}
+
 export type SortOption = "recent" | "highest"
 
 export interface User {

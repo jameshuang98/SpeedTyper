@@ -2,19 +2,17 @@ import React, { useState, useEffect, useRef, createRef } from 'react';
 import { Typography } from '@mui/material';
 
 import { GameState, InputWord } from 'constants/types';
+import { timeLimit } from 'constants/constants';
 import samples from '../../constants/samples'
 import { isValidKey } from '../../helpers';
 import GameStateButton from 'components/Button/GameStateButton';
 import Postgame from 'components/Postgame/Postgame';
 import TextDisplay from 'components/TextDisplay/TextDisplay';
 import Countdown from 'components/Countdown/Countdown';
-
-import classes from './Main.module.scss';
 import { postScore } from 'api/scores';
 import { useAuth } from 'contexts/AuthContext';
 
-// Constants
-const timeLimit = 60;
+import classes from './Main.module.scss';
 
 const Main: React.FC = () => {
     const [countdown, setCountdown] = useState<number>(timeLimit);

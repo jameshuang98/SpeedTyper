@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using server.Models.DTOs;
 using server.Models.Entities;
 using server.Repositories;
 
-public class ScoreRepository: IScoreRepository
+public class ScoreRepository : IScoreRepository
 {
-	private readonly SpeedTyperDbContext _context;
-	public ScoreRepository(SpeedTyperDbContext speedTyperDbContext)
-	{
-		_context = speedTyperDbContext;
-	}
+    private readonly SpeedTyperDbContext _context;
+    public ScoreRepository(SpeedTyperDbContext speedTyperDbContext)
+    {
+        _context = speedTyperDbContext;
+    }
     public async Task<IEnumerable<Score>> GetScoresAsync()
     {
         return await _context.Scores.ToListAsync();
@@ -30,5 +31,4 @@ public class ScoreRepository: IScoreRepository
         await _context.SaveChangesAsync();
         return result.Entity;
     }
-
 }
