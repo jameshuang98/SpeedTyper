@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, createRef } from 'react';
 import { Typography } from '@mui/material';
 
-import { GameState, InputWord } from 'constants/types';
+import { CreateScoreDTO, GameState, InputWord } from 'constants/types';
 import { timeLimit } from 'constants/constants';
 import samples from '../../constants/samples'
 import { isValidKey } from '../../helpers';
@@ -114,17 +114,16 @@ const Main: React.FC = () => {
     }
 
     const submitResult = async (): Promise<void> => {
-        const score = {
+        const score : CreateScoreDTO = {
             userId: user!.id,
             correctWords: correctWords,
             incorrectWords: incorrectWords,
             characters: input.length
         }
         try {
-            const response = await postScore(score);
-            console.log("response score", response)
+            await postScore(score);
         } catch (err: any) {
-            console.log(err.response.data);
+            console.log(err);
         }
     }
 

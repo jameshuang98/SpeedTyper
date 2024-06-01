@@ -11,10 +11,10 @@ const useService = <T>(get: () => Promise<T>) => {
 
       try {
         const response = await get();
-        console.log(response)
+        // console.log(response)
         setResponse(response);
       } catch (err) {
-        console.log(err)
+        // console.log(err)
         setError(err as Error);
       } finally {
         setLoading(false);

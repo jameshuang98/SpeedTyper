@@ -35,7 +35,6 @@ function ProfileForm() {
             profileImageURL: user!.profileImageURL
         };
         if (!areObjectsEqual(originalData, userData)) {
-            console.log("setting")
             setOriginalData(userData)
             resetForm(userData)
         }
