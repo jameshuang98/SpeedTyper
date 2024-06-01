@@ -10,12 +10,13 @@ import TextDisplay from 'components/TextDisplay/TextDisplay';
 import Countdown from 'components/Countdown/Countdown';
 
 import classes from './Main.module.scss';
+import { postScore } from 'api/scores';
+import { useAuth } from 'contexts/AuthContext';
 
 // Constants
 const timeLimit = 60;
 
 const Main: React.FC = () => {
-
     const [countdown, setCountdown] = useState<number>(timeLimit);
     const [gameState, setGameState] = useState<GameState>('pregame');
     const [openModal, setOpenModal] = useState(false);
@@ -33,6 +34,10 @@ const Main: React.FC = () => {
     const [lineIndexes, setLineIndexes] = useState<Array<number>>([]);
     const [currLineIndex, setCurrLineIndex] = useState<number>(0);
 
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const { user } = useAuth();
+    const hasSubmittedResult = useRef<boolean>(false);  // Using useRef to avoid re-renders
+
     useEffect(() => {
         reset();
     }, []);
@@ -40,6 +45,28 @@ const Main: React.FC = () => {
     useEffect(() => {
         getLineIndexes();
     }, [wordRefs]);
+
+    useEffect(() => {
+        if (gameState === 'playing' && countdown === 0) {
+            setGameState('postgame');
+            setOpenModal(true);
+            handlePostGame();
+        }
+    }, [countdown, gameState]);
+
+    useEffect(() => {
+        if (gameState === 'playing') {
+            intervalRef.current = setInterval(() => {
+                setCountdown((prev) => prev - 1);
+            }, 1000);
+
+            return () => {
+                if (intervalRef.current) {
+                    clearInterval(intervalRef.current);
+                }
+            };
+        }
+    }, [gameState]);
 
     const generateWords = (): string[] => {
         const randomIdx = Math.floor(Math.random() * (samples.length));
@@ -88,32 +115,38 @@ const Main: React.FC = () => {
         setCountdown(timeLimit);
     }
 
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
-    const changeGameState = (state: GameState): void => {
-        // start the game
-        if (gameState !== "playing") {
-            setGameState("playing");
-
-            intervalRef.current = setInterval(() => {
-                setCountdown((prev) => {
-                    if (prev === 0) {
-                        if (intervalRef.current) {
-                            clearInterval(intervalRef.current);
-                        }
-                        setGameState("postgame");
-                        setOpenModal(true);
-                        return timeLimit;
-                    } else {
-                        return prev - 1;
-                    }
-                });
-            }, 1000);
+    const submitResult = async (): Promise<void> => {
+        const score = {
+            userId: user!.id,
+            correctWords: correctWords,
+            incorrectWords: incorrectWords,
+            characters: input.length
         }
+        try {
+            const response = await postScore(score);
+            console.log("response score", response)
+        } catch (err: any) {
+            console.log(err.response.data);
+        }
+    }
 
-        // pause the game
-        else if (state === "paused" && intervalRef.current) {
-            clearInterval(intervalRef.current);
-            setGameState("paused");
+    const handlePostGame = async () => {
+        if (user && !hasSubmittedResult.current) {  // Check if result has already been submitted
+            hasSubmittedResult.current = true;       // Mark as submitted to prevent duplicate submissions
+            await submitResult();
+        }
+    };
+
+    const changeGameState = (state: GameState): void => {
+        if (gameState !== 'playing' && state === 'playing') {
+            setGameState('playing');
+            hasSubmittedResult.current = false;  // Reset submission status when game starts
+            setCountdown(timeLimit);
+        } else if (state === 'paused') {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+            setGameState('paused');
         }
     };
 
@@ -197,11 +230,7 @@ const Main: React.FC = () => {
 
         const wordToCompare = words[wordIdx];
         const isMatch = wordToCompare.startsWith(currWordInput.trim()) || wordToCompare === currWordInput.trim();
-        if (isMatch) {
-            return classes.correctSpelling;
-        } else {
-            return classes.incorrectSpelling;
-        }
+        return isMatch ? classes.correctSpelling : classes.incorrectSpelling;
     };
 
     // Calculating WPM based on gameState
