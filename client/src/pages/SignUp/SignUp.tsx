@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -22,9 +22,11 @@ export default function SignUp() {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
   const { user, login } = useAuth();
-  if (user) {
-    navigate("/");
-  };
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const [responseError, setReponseError] = useState("");
   const { values, errors, validForm, validate } = useValidateUserForm({
