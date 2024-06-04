@@ -9,16 +9,16 @@ interface FormErrors {
 }
 
 // Define a generic type for validation options
-interface ValidationOptions {
-    [key: string]: boolean | undefined;
-}
+type ValidationOptions<T> = {
+    [K in keyof T]?: boolean;
+};
 
 // Define a generic type for initial form values
 type InitialValues<T> = {
     [K in keyof T]: T[K];
 }
 
-const useValidateForm = <T extends UserForm>(initialValues: InitialValues<T>) => {
+const useValidateForm = <T extends UserForm>(initialValues: InitialValues<T>, validationOptions: ValidationOptions<T>) => {
     const [values, setValues] = useState<T>(initialValues);
     const [errors, setErrors] = useState<FormErrors>({});
     const [validForm, setValidForm] = useState(false);
@@ -29,17 +29,17 @@ const useValidateForm = <T extends UserForm>(initialValues: InitialValues<T>) =>
         setValidForm(false);
     }
 
-    const validate = (fieldName: keyof T, value: string, options?: ValidationOptions) => {
+    const validate = (fieldName: keyof T, value: string) => {
         let errorMessage = "";
         switch (fieldName) {
             case "email":
-                errorMessage = (value && !isValidEmail(value)) ? "Invalid email" : "";
+                errorMessage = !value ? "Cannot be empty" : !isValidEmail(value) ? "Invalid email" : "";
                 break;
             case "password":
-                errorMessage = (options?.validatePassword && !isValidPassword(value)) ? "Password must be at least 8 characters long, including at least 1 lowercase character, 1 uppercase character, 1 number, and 1 special character" : "";
+                errorMessage = !isValidPassword(value) ? "Password must be at least 8 characters long, including at least 1 lowercase character, 1 uppercase character, 1 number, and 1 special character" : "";
                 break;
             case "profileImageURL":
-                errorMessage = (options?.validateProfileImageURL && !value.trim()) ? "Invalid profile picture" : "";
+                errorMessage = (validationOptions.profileImageURL && !value.trim()) ? "Invalid profile picture" : "";
                 break;
             default:
                 errorMessage = (!value.trim()) ? "Cannot be empty" : "";
@@ -49,7 +49,11 @@ const useValidateForm = <T extends UserForm>(initialValues: InitialValues<T>) =>
         setErrors(prevErrors => ({ ...prevErrors, [fieldName]: errorMessage }));
 
         // Check if any error exists, if all fields are non-empty
-        const isValid = !hasNonEmptyStringValue({ ...errors, [fieldName]: errorMessage }) && !areObjectsEqual({ ...values, [fieldName]: value }, initialValues)
+        const formValues = { ...values, [fieldName]: value };
+        const requiredFormValues = Object.fromEntries(
+            Object.entries(formValues).filter(([key, value]) => validationOptions[key as keyof T])
+        );
+        const isValid = !hasNonEmptyStringValue({ ...errors, [fieldName]: errorMessage }) && !hasEmptyStringValue(requiredFormValues) && !areObjectsEqual({ ...values, [fieldName]: value }, initialValues)
         setValidForm(isValid);
     };
 

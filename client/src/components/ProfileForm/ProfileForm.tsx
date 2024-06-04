@@ -24,7 +24,14 @@ function ProfileForm() {
         email: user!.email,
         profileImageURL: user!.profileImageURL
     });
-    const { values, errors, validForm, validate, resetForm } = useValidateUserForm(originalData);
+    const validationOptions = {
+        firstName: true,
+        lastName: true,
+        username: true,
+        email: true,
+        profileImageURL: false
+    };
+    const { values, errors, validForm, validate, resetForm } = useValidateUserForm(originalData, validationOptions);
 
     useEffect(() => {
         const userData = {
@@ -40,8 +47,9 @@ function ProfileForm() {
         }
     }, [user])
 
+
     const handleProfileChange = (fieldName: keyof UserDTO, value: string) => {
-        validate(fieldName, value, { validatePassword: false });
+        validate(fieldName, value);
     };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

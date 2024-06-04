@@ -29,15 +29,21 @@ export default function SignUp() {
   }, [user, navigate]);
 
   const [responseError, setReponseError] = useState("");
-  const { values, errors, validForm, validate } = useValidateUserForm({
+  const { values, errors, validForm, validate } = useValidateUserForm<UserRegistrationRequest>({
     firstName: "",
     lastName: "",
     username: "",
     email: "",
     password: "",
+  }, {
+    firstName: true,
+    lastName: true,
+    username: true,
+    email: true,
+    password: true,
   });
   const handleRegistrationChange = (fieldName: keyof UserRegistrationRequest, value: string) => {
-    validate(fieldName, value, { validatePassword: true });
+    validate(fieldName, value);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
