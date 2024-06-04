@@ -1,8 +1,7 @@
 import React, { ReactNode } from 'react'
+import { Paper, Divider } from '@mui/material'
 
 import classes from "./ResultCard.module.scss"
-
-import { Paper, Divider } from '@mui/material'
 
 type Props = {
   title: string;

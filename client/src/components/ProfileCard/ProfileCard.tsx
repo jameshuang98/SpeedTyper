@@ -1,14 +1,13 @@
 import React, { useCallback, useMemo } from 'react'
 import { Paper, Divider, Typography, CircularProgress, Avatar } from '@mui/material'
 
-import { useAuth } from 'contexts/AuthContext'
 import ProfileStat from './ProfileStat';
-
-import classes from "./ProfileCard.module.scss"
+import { useAuth } from 'contexts/AuthContext'
 import { getUserScores } from 'api/scores';
 import useService from 'hooks/useService';
 import { sortResults } from 'helpers';
 
+import classes from "./ProfileCard.module.scss"
 
 function ProfileCard() {
     const { user } = useAuth();

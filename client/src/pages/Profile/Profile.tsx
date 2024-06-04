@@ -3,10 +3,10 @@ import { Hidden } from '@mui/material';
 
 import ProfileCard from 'components/ProfileCard/ProfileCard';
 import ProfileForm from 'components/ProfileForm/ProfileForm';
+import Loading from 'components/Loading/Loading';
 import { useAuth } from 'contexts/AuthContext';
 
 import classes from './Profile.module.scss';
-import Loading from 'components/Loading/Loading';
 
 type Props = {}
 

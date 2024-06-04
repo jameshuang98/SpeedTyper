@@ -7,11 +7,11 @@ import ScoreHistory from "./pages/ScoreHistory/ScoreHistory";
 import NotFound from "pages/NotFound/NotFound";
 import SignIn from "pages/SignIn/SignIn";
 import SignUp from "pages/SignUp/SignUp";
+import Profile from "pages/Profile/Profile";
 import { SnackbarProvider } from './contexts/SnackbarContext';
 import { AuthProvider } from "contexts/AuthContext";
 
 import "./App.scss";
-import Profile from "pages/Profile/Profile";
 
 
 function App() {

@@ -1,10 +1,10 @@
 import React, { MouseEventHandler } from 'react'
-import { GameState } from '../../constants/types';
-import classes from "./GameStateButton.module.scss";
-
 import { Button, IconButton, Typography } from '@mui/material';
-import { RestartAlt, PlayCircleFilled, PlayArrow, Pause } from '@mui/icons-material';
+import { RestartAlt, PlayArrow, Pause } from '@mui/icons-material';
 
+import { GameState } from '../../constants/types';
+
+import classes from "./GameStateButton.module.scss";
 
 type Props = {
   gameState: GameState

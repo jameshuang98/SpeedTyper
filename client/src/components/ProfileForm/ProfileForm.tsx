@@ -8,10 +8,10 @@ import { patchUser } from 'api/users';
 import { useAuth } from 'contexts/AuthContext';
 import { useSnackbar } from 'contexts/SnackbarContext';
 import useValidateUserForm from 'hooks/useValidateUserForm';
+import { areObjectsEqual } from 'helpers';
 import UploadWidget from 'components/UploadWidget/UploadWidget';
 
 import classes from "./ProfileForm.module.scss";
-import { areObjectsEqual } from 'helpers';
 
 function ProfileForm() {
     const { user, login } = useAuth();

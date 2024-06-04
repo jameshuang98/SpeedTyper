@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 
-import classes from "./TextDisplay.module.scss";
-
 import { GameState } from 'constants/types';
+
+import classes from "./TextDisplay.module.scss";
 
 type Props = {
     gameState: GameState;

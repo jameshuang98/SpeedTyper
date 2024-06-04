@@ -1,8 +1,10 @@
 import React from 'react';
 import { Modal, Box, Fade, Backdrop, IconButton, Button } from '@mui/material';
-import classes from "./Postgame.module.scss";
-import ResultCard from 'components/ResultCard/ResultCard';
 import { RestartAlt } from '@mui/icons-material';
+
+import ResultCard from 'components/ResultCard/ResultCard';
+
+import classes from "./Postgame.module.scss";
 
 type Props = {
     correctWords: number;
