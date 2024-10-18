@@ -12,19 +12,23 @@
 .outputContainer {
     display: flex;
     flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    height: 268px;
+    align-items: center;
 }
 
 .text {
     background-color: #FFFFFF;
     border-radius: 10px;
-    height: 268px;
+    height: 100%;
     line-height: 1.67;
     overflow-y: hidden;
     padding: 12px;
-    height: 268px;
     line-height: 1.67;
     overflow-y: hidden;
     padding: 12px;
+    width: 100%;
 }
 
 .inputContainer {

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { CircularProgress } from '@mui/material';
 
 import { GameState } from 'constants/types';
 
@@ -42,9 +43,16 @@ function TextDisplay(props: Props) {
     return (
         <div className={classes.container}>
             <div className={classes.outputContainer}>
-                <div className={classes.text} style={gameState === "postgame" ? { overflowY: "scroll" } : {}}>
-                    {formattedWords}
-                </div>
+                {
+                    formattedWords.length === 0 &&
+                    <CircularProgress size="3rem" disableShrink/>
+                }
+                {
+                    formattedWords.length !== 0 &&
+                    <div className={classes.text} style={gameState === "postgame" ? { overflowY: "scroll" } : {}}>
+                        {formattedWords}
+                    </div>
+                }
             </div>
             {gameState !== "postgame" && (
                 <div className={classes.inputContainer}>
