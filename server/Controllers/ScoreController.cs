@@ -24,7 +24,7 @@ public class ScoreController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpGet()]
-    public async Task<ActionResult<IEnumerable<Score>>> GetScores()
+    public async Task<ActionResult> GetScores()
     {
         var scores = await _scoreRepository.GetScoresAsync();
         if (scores == null)
@@ -36,7 +36,7 @@ public class ScoreController : ControllerBase
     }
 
     [HttpGet("leaderboard")]
-    public async Task<ActionResult<IEnumerable<Score>>> GetScoreLeaderboard()
+    public async Task<ActionResult> GetScoreLeaderboard()
     {
         var scores = await _scoreRepository.GetScoresAsync();
         if (scores == null)
@@ -49,7 +49,7 @@ public class ScoreController : ControllerBase
     }
 
     [HttpGet("GetUserScores/{userId:int}")]
-    public async Task<ActionResult<IEnumerable<Score>>> GetScoresByUserId(int userId)
+    public async Task<ActionResult> GetScoresByUserId(int userId)
     {
         if (!_authService.IsUserAuthorized(userId))
         {
@@ -67,7 +67,7 @@ public class ScoreController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Score>> GetScore(int id)
+    public async Task<ActionResult> GetScore(int id)
     {
         var score = await _scoreRepository.GetScoreByIdAsync(id);
         if (score == null)
@@ -79,7 +79,7 @@ public class ScoreController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Score>> CreateScore([FromBody] CreateScoreDTO createScoreDTO)
+    public async Task<ActionResult> CreateScore([FromBody] CreateScoreDTO createScoreDTO)
     {
         if (!_authService.IsUserAuthorized(createScoreDTO.UserId))
         {
