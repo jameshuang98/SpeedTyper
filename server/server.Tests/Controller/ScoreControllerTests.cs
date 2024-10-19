@@ -101,7 +101,7 @@ namespace server.Tests.Controller
             // Arrange
             var userId = 1;
             A.CallTo(() => _authService.IsUserAuthorized(userId)).Returns(true);
-            A.CallTo(() => _scoreRepository.GetScoresByUserIdAsync(userId)).Returns(Task.FromResult<IEnumerable<Score>>(null));
+            A.CallTo(() => _scoreRepository.GetScoresByUserIdAsync(userId)).Returns(Task.FromResult<IEnumerable<Score>?>(null));
 
             // Act
             var result = await _scoreController.GetScoresByUserId(userId);
